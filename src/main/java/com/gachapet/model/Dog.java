@@ -13,9 +13,10 @@ package com.gachapet.model;
  */
 public class Dog extends AbstractPet {
 
-    private static final int DOG_PLAY_HP_BONUS = 5;
-    private static final int DOG_HUNGER_DECAY = 8;
-    private static final int DOG_TRICK_EXP_REWARD = 15;
+    private static final int DOG_PLAY_HP_BONUS = 3;
+    private static final int DOG_HUNGER_DECAY = 3;
+    private static final int DOG_TRICK_EXP_REWARD = 12;
+
 
     public Dog(String name) {
         super(name);
@@ -37,14 +38,15 @@ public class Dog extends AbstractPet {
     public void play() {
         if (!canDoAction()) return;
 
-        setHappiness(getHappiness() + 20);
-        setEnergy(getEnergy() - 20);
-        setHunger(getHunger() - 15);
+        setHappiness(getHappiness() + 18);
+        setEnergy(getEnergy() - 10);
+        setHunger(getHunger() - 6);
         setHp(getHp() + DOG_PLAY_HP_BONUS);
         gainExperience(5);
 
         System.out.println(getName() + " runs around happily! +HP:" + DOG_PLAY_HP_BONUS);
     }
+
 
     @Override
     protected int getHungerDecayRate() {
@@ -57,11 +59,12 @@ public class Dog extends AbstractPet {
 
         gainExperience(DOG_TRICK_EXP_REWARD);
         setHappiness(getHappiness() + 10);
-        setEnergy(getEnergy() - 15);
-        setHunger(getHunger() - 20);
+        setEnergy(getEnergy() - 10);
+        setHunger(getHunger() - 8);
 
         System.out.println(getName() + " Sit! Stand! Backflip! +EXP:" + DOG_TRICK_EXP_REWARD + " 🐕");
     }
+
 
     @Override
     public String makeSound() {
