@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<!--
+    main_view.fxml - หน้าจอหลักของ Kawaii Gacha Pet Sanctuary
+    ใช้ JavaFX Components อย่างน้อย 10 ชนิด:
+    1. MenuBar       - แถบเมนูด้านบน
+    2. TabPane       - แท็บแยกหน้าจอ
+    3. ListView      - แสดงรายชื่อสัตว์เลี้ยง
+    4. ProgressBar   - แถบ HP และ Hunger
+    5. Button        - ปุ่มต่างๆ
+    6. Label         - ข้อความแสดงข้อมูล
+    7. ImageView     - แสดงรูปสัตว์เลี้ยง
+    8. ComboBox      - เลือกประเภทอาหาร
+    9. CheckBox      - เปิด/ปิดเสียง
+    10. Slider       - ปรับความดังเสียง
+    11. Separator    - เส้นแบ่ง (Bonus)
+-->
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.gachapet.controller.MainController"
+            styleClass="root-pane">
+
+    <!-- ===== TOP: MenuBar (Component 1) ===== -->
+    <top>
+        <MenuBar fx:id="menuBar" styleClass="menu-bar">
+            <Menu text="📁 File">
+                <MenuItem text="💾 Save" onAction="#onMenuSave"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="🚪 Exit" onAction="#onMenuExit"/>
+            </Menu>
+            <Menu text="❓ Help">
+                <MenuItem text="📖 วิธีเล่น" onAction="#onMenuHowToPlay"/>
+            </Menu>
+        </MenuBar>
+    </top>
+
+    <!-- ===== CENTER: TabPane (Component 2) ===== -->
+    <center>
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE" styleClass="main-tab-pane">
+
+            <!-- ========== แท็บ 1: สัตว์เลี้ยงของฉัน ========== -->
+            <Tab text="🐾 สัตว์เลี้ยงของฉัน">
+                <HBox spacing="10" styleClass="tab-content">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+                    <!-- LEFT: รายชื่อสัตว์เลี้ยง -->
+                    <VBox spacing="8" prefWidth="280" styleClass="list-panel">
+                        <Label text="📋 สัตว์เลี้ยงของฉัน" styleClass="panel-title"/>
+                        <!-- Component 3: ListView -->
+                        <ListView fx:id="petListView" prefHeight="320" styleClass="pet-list"/>
+
+                        <!-- ปุ่มเปิดตู้กาชา -->
+                        <!-- Component 5: Button -->
+                        <Button text="🎰 เปิดตู้กาชา!" onAction="#onOpenGachaButtonClick"
+                                maxWidth="Infinity" styleClass="gacha-button"/>
+                    </VBox>
+
+                    <!-- RIGHT: แผง Status สัตว์เลี้ยง -->
+                    <VBox spacing="12" HBox.hgrow="ALWAYS" styleClass="status-panel">
+
+                        <!-- Header -->
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <!-- Component 7: ImageView -->
+                            <ImageView fx:id="petImageView" fitWidth="64" fitHeight="64"
+                                       preserveRatio="true"/>
+                            <VBox spacing="4">
+                                <!-- Component 6: Label -->
+                                <Label fx:id="selectedPetNameLabel" text="เลือกสัตว์เลี้ยง..."
+                                       styleClass="pet-name-label"/>
+                                <Label fx:id="selectedPetTypeLabel" text="ชนิด: -"
+                                       styleClass="pet-type-label"/>
+                                <Label fx:id="levelLabel" text="Lv.-" styleClass="level-label"/>
+                            </VBox>
+                        </HBox>
+
+                        <Separator/>
+
+                        <!-- HP Bar (Component 4: ProgressBar) -->
+                        <VBox spacing="4">
+                            <Label fx:id="hpLabel" text="HP: -/100" styleClass="stat-label"/>
+                            <ProgressBar fx:id="hpProgressBar" progress="0"
+                                        maxWidth="Infinity" styleClass="hp-bar"/>
+                        </VBox>
+
+                        <!-- Hunger Bar (Component 4: ProgressBar) -->
+                        <VBox spacing="4">
+                            <Label fx:id="hungerLabel" text="Hunger: -/100" styleClass="stat-label"/>
+                            <ProgressBar fx:id="hungerProgressBar" progress="0"
+                                        maxWidth="Infinity" styleClass="hunger-bar"/>
+                        </VBox>
+
+                        <Separator/>
+
+                        <!-- เลือกอาหาร (Component 8: ComboBox) -->
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="🍽️ อาหาร:" styleClass="stat-label"/>
+                            <ComboBox fx:id="foodComboBox" prefWidth="220" styleClass="food-combo"/>
+                        </HBox>
+
+                        <!-- ปุ่มต่างๆ -->
+                        <HBox spacing="8">
+                            <Button text="🍖 ให้อาหาร" onAction="#onFeedButtonClick"
+                                    styleClass="feed-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Button text="🎮 เล่น" onAction="#onPlayButtonClick"
+                                    styleClass="play-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Button text="✨ Action" onAction="#onActionButtonClick"
+                                    styleClass="action-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        </HBox>
+
+                    </VBox>
+                </HBox>
+            </Tab>
+
+            <!-- ========== แท็บ 2: การตั้งค่า ========== -->
+            <Tab text="⚙️ ตั้งค่า">
+                <VBox spacing="16" styleClass="settings-panel">
+                    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+                    <Label text="🔊 การตั้งค่าเสียง" styleClass="panel-title"/>
+                    <Separator/>
+
+                    <!-- Component 9: CheckBox -->
+                    <CheckBox fx:id="soundCheckBox" text="เปิดใช้งานเอฟเฟกต์เสียง"
+                              styleClass="sound-checkbox"/>
+
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <Label text="🎵 ความดัง BGM:" styleClass="stat-label"/>
+                        <!-- Component 10: Slider -->
+                        <Slider fx:id="bgmSlider" min="0" max="100" value="50"
+                                prefWidth="200" showTickMarks="true" showTickLabels="true"
+                                majorTickUnit="25" styleClass="bgm-slider"/>
+                    </HBox>
+
+                    <Separator/>
+                    <Label text="ℹ️ เกี่ยวกับเกม" styleClass="panel-title"/>
+                    <Label text="Kawaii Gacha Pet Sanctuary v1.0" styleClass="stat-label"/>
+                    <Label text="พัฒนาโดย: นักศึกษา Java Programming 🐾" styleClass="stat-label"/>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+    <!-- ===== BOTTOM: Status Bar ===== -->
+    <bottom>
+        <HBox styleClass="status-bar" alignment="CENTER_LEFT" spacing="20">
+            <padding><Insets top="6" right="12" bottom="6" left="12"/></padding>
+            <Label fx:id="coinLabel" text="💰 500 เหรียญ" styleClass="coin-label"/>
+            <Separator orientation="VERTICAL"/>
+            <Label fx:id="statusMessageLabel" text="ยินดีต้อนรับ! 🐾"
+                   styleClass="status-message" HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

@@ -1,0 +1,326 @@
+/* ===================================
+   kawaii.css - Kawaii Gacha Pet Sanctuary
+   สไตล์ธีม: Soft Pastel Kawaii 🌸
+   =================================== */
+
+/* ===== Root / Global ===== */
+.root-pane {
+    -fx-background-color: #fdf4ff;
+    -fx-font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
+}
+
+/* ===== MenuBar ===== */
+.menu-bar {
+    -fx-background-color: #e8b4e8;
+    -fx-border-color: #d4a0d4;
+    -fx-border-width: 0 0 2 0;
+}
+
+.menu-bar .menu .label {
+    -fx-text-fill: #5a2d5a;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+/* ===== TabPane ===== */
+.main-tab-pane {
+    -fx-background-color: transparent;
+}
+
+.main-tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #f5d0f5;
+}
+
+.main-tab-pane .tab {
+    -fx-background-color: #f0c0f0;
+    -fx-background-radius: 8 8 0 0;
+    -fx-padding: 6 16 6 16;
+}
+
+.main-tab-pane .tab:selected {
+    -fx-background-color: #e8a0e8;
+}
+
+.main-tab-pane .tab .tab-label {
+    -fx-text-fill: #5a2d5a;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+/* ===== Panels ===== */
+.tab-content {
+    -fx-background-color: #fdf4ff;
+    -fx-padding: 10;
+}
+
+.list-panel {
+    -fx-background-color: #fff0ff;
+    -fx-background-radius: 12;
+    -fx-border-color: #e8b4e8;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-padding: 12;
+}
+
+.status-panel {
+    -fx-background-color: #fff8ff;
+    -fx-background-radius: 12;
+    -fx-border-color: #e8b4e8;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-padding: 16;
+}
+
+.settings-panel {
+    -fx-background-color: #fdf4ff;
+    -fx-padding: 20;
+}
+
+/* ===== Labels ===== */
+.panel-title {
+    -fx-text-fill: #7b3f7b;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.pet-name-label {
+    -fx-text-fill: #5a2d5a;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.pet-type-label {
+    -fx-text-fill: #9b59b6;
+    -fx-font-size: 12px;
+}
+
+.level-label {
+    -fx-text-fill: #e67e22;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.stat-label {
+    -fx-text-fill: #666;
+    -fx-font-size: 13px;
+}
+
+/* ===== ProgressBars ===== */
+.hp-bar {
+    -fx-accent: #e74c3c;
+    -fx-background-color: #ffc0cb;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-pref-height: 16;
+}
+
+.hunger-bar {
+    -fx-accent: #f39c12;
+    -fx-background-color: #ffe0a0;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-pref-height: 16;
+}
+
+/* ===== Buttons ===== */
+.gacha-button {
+    -fx-background-color: linear-gradient(to bottom, #e8a0ff, #c060e0);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(192, 96, 224, 0.5), 8, 0, 0, 3);
+}
+
+.gacha-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #d080f0, #a040c0);
+    -fx-effect: dropshadow(gaussian, rgba(160, 64, 192, 0.7), 12, 0, 0, 4);
+}
+
+.feed-button {
+    -fx-background-color: linear-gradient(to bottom, #ff9966, #ff6633);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+}
+
+.feed-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #ff7744, #ee4411);
+}
+
+.play-button {
+    -fx-background-color: linear-gradient(to bottom, #66cc88, #33aa55);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+}
+
+.action-button {
+    -fx-background-color: linear-gradient(to bottom, #8888ff, #5555dd);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+}
+
+/* ===== ListView ===== */
+.pet-list {
+    -fx-background-color: #fff0ff;
+    -fx-background-radius: 8;
+    -fx-border-color: #e0b0e0;
+    -fx-border-radius: 8;
+}
+
+.pet-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5a2d5a;
+    -fx-padding: 6 8 6 8;
+    -fx-font-size: 12px;
+}
+
+.pet-list .list-cell:selected {
+    -fx-background-color: #e8b4e8;
+    -fx-text-fill: #3a1d3a;
+}
+
+/* ===== ComboBox ===== */
+.food-combo {
+    -fx-background-color: #fff0ff;
+    -fx-border-color: #e0b0e0;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+/* ===== Slider ===== */
+.bgm-slider .track {
+    -fx-background-color: #e0b0e0;
+}
+
+.bgm-slider .thumb {
+    -fx-background-color: #c060e0;
+    -fx-background-radius: 50%;
+}
+
+/* ===== CheckBox ===== */
+.sound-checkbox .box {
+    -fx-background-color: #fff0ff;
+    -fx-border-color: #c060e0;
+    -fx-border-radius: 4;
+}
+
+.sound-checkbox:selected .mark {
+    -fx-background-color: #c060e0;
+}
+
+/* ===== Status Bar ===== */
+.status-bar {
+    -fx-background-color: #f0d0f0;
+    -fx-border-color: #d4a0d4;
+    -fx-border-width: 2 0 0 0;
+}
+
+.coin-label {
+    -fx-text-fill: #7b3f00;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.status-message {
+    -fx-text-fill: #5a2d5a;
+    -fx-font-size: 13px;
+}
+
+/* ===== Gacha Screen ===== */
+.gacha-root {
+    -fx-background-color: linear-gradient(to bottom, #3a1060, #6a2090);
+    -fx-padding: 20;
+}
+
+.gacha-title {
+    -fx-text-fill: #ffee88;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(255, 220, 50, 0.8), 12, 0, 0, 0);
+}
+
+.gacha-coin-label {
+    -fx-text-fill: #ffd700;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.drop-rate-label {
+    -fx-text-fill: #ccccff;
+    -fx-font-size: 13px;
+}
+
+.pity-label {
+    -fx-text-fill: #ffcc44;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}
+
+.roll-button {
+    -fx-background-color: linear-gradient(to bottom, #4488ff, #2255dd);
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(68, 136, 255, 0.6), 10, 0, 0, 3);
+}
+
+.roll-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #55aaff, #1133cc);
+}
+
+.roll-ten-button {
+    -fx-background-color: linear-gradient(to bottom, #ffaa22, #ff7700);
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255, 170, 34, 0.6), 10, 0, 0, 3);
+}
+
+.roll-ten-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #ffbb44, #ee5500);
+}
+
+.result-container {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 16;
+    -fx-min-height: 100;
+}
+
+.result-placeholder {
+    -fx-text-fill: #aaaacc;
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+}
+
+.result-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+}
+
+.result-detail-label {
+    -fx-text-fill: #ddddff;
+    -fx-font-size: 12px;
+    -fx-text-alignment: center;
+}
+
+.sound-checkbox-gacha .label {
+    -fx-text-fill: #ccccff;
+}
