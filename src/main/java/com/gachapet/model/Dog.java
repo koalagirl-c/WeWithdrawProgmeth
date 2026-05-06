@@ -13,9 +13,9 @@ package com.gachapet.model;
  */
 public class Dog extends AbstractPet {
 
-    private static final int DOG_PLAY_HP_BONUS = 3;
-    private static final int DOG_HUNGER_DECAY = 3;
-    private static final int DOG_TRICK_EXP_REWARD = 12;
+    private static final int DOG_PLAY_HP_BONUS = 4;
+    private static final int DOG_HUNGER_DECAY = 2;
+    private static final int DOG_TRICK_EXP_REWARD = 10;
 
 
     public Dog(String name) {
@@ -38,8 +38,8 @@ public class Dog extends AbstractPet {
     public void play() {
         if (!canDoAction()) return;
 
-        setHappiness(getHappiness() + 18);
-        setEnergy(getEnergy() - 10);
+        setHappiness(getHappiness() + 20);
+        setEnergy(getEnergy() - 8);
         setHunger(getHunger() - 6);
         setHp(getHp() + DOG_PLAY_HP_BONUS);
         gainExperience(5);
@@ -59,8 +59,8 @@ public class Dog extends AbstractPet {
 
         gainExperience(DOG_TRICK_EXP_REWARD);
         setHappiness(getHappiness() + 10);
-        setEnergy(getEnergy() - 10);
-        setHunger(getHunger() - 8);
+        setEnergy(getEnergy() - 7);
+        setHunger(getHunger() - 7);
 
         System.out.println(getName() + " Sit! Stand! Backflip! +EXP:" + DOG_TRICK_EXP_REWARD + " 🐕");
     }

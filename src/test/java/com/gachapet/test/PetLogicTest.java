@@ -146,6 +146,8 @@ class PetLogicTest {
         assertThrows(IllegalArgumentException.class, () -> new Cat(""));
         assertThrows(IllegalArgumentException.class, () -> new Cat("   "));
         assertThrows(IllegalArgumentException.class, () -> new Dog(null));
+        assertThrows(IllegalArgumentException.class, () -> new Dog("โชโก"));
+        assertThrows(IllegalArgumentException.class, () -> new Cat("Cat123"));
     }
 
     // ==================== Polymorphism Tests ====================
@@ -271,7 +273,7 @@ class PetLogicTest {
         cat.setHunger(100);
         dog.setHunger(100);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 30; i++) {
             cat.updateStatus();
             dog.updateStatus();
         }
@@ -283,15 +285,61 @@ class PetLogicTest {
     }
 
     @Test
-    @DisplayName("tick() should update pet age and reduce stats")
-    void testTickUpdatesAgeAndStats() {
+    @DisplayName("tick() should update pet age without reducing stats every second")
+    void testTickUpdatesAgeWithoutImmediateStatDecay() {
         int ageBefore = cat.getAge();
         int hungerBefore = cat.getHunger();
 
         cat.tick();
 
         assertEquals(ageBefore + 1, cat.getAge(), "tick() should increase age by 1.");
-        assertTrue(cat.getHunger() < hungerBefore, "tick() should reduce Hunger.");
+        assertEquals(hungerBefore, cat.getHunger(), "Hunger should not decay every second.");
+    }
+
+    @Test
+    @DisplayName("Stats should decay after enough time passes")
+    void testStatsDecayAfterCareInterval() {
+        int hungerBefore = cat.getHunger();
+
+        for (int i = 0; i < 30; i++) {
+            cat.tick();
+        }
+
+        assertTrue(cat.getHunger() < hungerBefore, "Hunger should decay after the care interval.");
+    }
+
+    @Test
+    @DisplayName("Inactive pets should decay slowly without losing energy")
+    void testInactivePetStatsDecaySlowly() {
+        int ageBefore = cat.getAge();
+        int hungerBefore = cat.getHunger();
+        int happinessBefore = cat.getHappiness();
+        int energyBefore = cat.getEnergy();
+
+        cat.tickInactive();
+
+        assertEquals(ageBefore, cat.getAge(), "Inactive pets should not use active age ticks.");
+        assertEquals(hungerBefore, cat.getHunger(), "Inactive pets should not lose Hunger every second.");
+        assertEquals(happinessBefore, cat.getHappiness(), "Inactive pets should not lose Happiness every second.");
+        assertEquals(energyBefore, cat.getEnergy(), "Inactive pets should not lose Energy.");
+
+        for (int i = 1; i < 60; i++) {
+            cat.tickInactive();
+        }
+
+        assertEquals(ageBefore, cat.getAge(), "Inactive pets should not use active age ticks.");
+        assertTrue(cat.getHunger() < hungerBefore, "Inactive pets should slowly lose Hunger.");
+        assertTrue(cat.getHappiness() < happinessBefore, "Inactive pets should slowly lose Happiness.");
+        assertEquals(energyBefore, cat.getEnergy(), "Inactive pets should not lose Energy.");
+    }
+
+    @Test
+    @DisplayName("Care alert should trigger when a stat is half or lower")
+    void testCareAlertWhenStatsDropToHalf() {
+        cat.setHunger(50);
+
+        assertTrue(cat.needsCareAlert(), "A pet should need care when Hunger is 50 or lower.");
+        assertTrue(cat.getCareAlertText().contains("Hunger 50/100"));
     }
 
     @Test
@@ -302,7 +350,9 @@ class PetLogicTest {
         cat.setHappiness(0);
         cat.setEnergy(0);
 
-        cat.updateStatus();
+        for (int i = 0; i < 30; i++) {
+            cat.updateStatus();
+        }
 
         assertTrue(cat.getHp() < 50, "Low stats should reduce HP.");
     }
@@ -315,7 +365,9 @@ class PetLogicTest {
         cat.setHappiness(100);
         cat.setEnergy(100);
 
-        cat.updateStatus();
+        for (int i = 0; i < 30; i++) {
+            cat.updateStatus();
+        }
 
         assertTrue(cat.getHp() > 50, "Good stats should restore HP slightly.");
     }
@@ -345,7 +397,9 @@ class PetLogicTest {
         cat.setEnergy(20);
         cat.sleep();
 
-        cat.updateStatus();
+        for (int i = 0; i < 8; i++) {
+            cat.updateStatus();
+        }
 
         assertTrue(cat.getEnergy() > 20, "Sleeping pet should gain energy.");
     }

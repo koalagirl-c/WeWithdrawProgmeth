@@ -14,7 +14,7 @@ package com.gachapet.model;
 public class Cat extends AbstractPet {
 
     private static final int CAT_PLAY_EXP_BONUS = 3;
-    private static final int CAT_HUNGER_DECAY = 3;
+    private static final int CAT_HUNGER_DECAY = 1;
 
     public Cat(String name) {
         super(name);

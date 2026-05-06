@@ -61,7 +61,11 @@ public class KawaiiPetApp extends Application {
                     Thread.sleep(1000); // เดินวินาทีละครั้งตามลอจิกเพื่อน
                     if (currentInventory != null) {
                         for (AbstractPet pet : currentInventory.getAllPets()) {
-                            pet.tick(); // เรียกใช้ระบบ tick ของเพื่อน[cite: 18, 24]
+                            if (pet == selectedPet) {
+                                pet.tick();
+                            } else {
+                                pet.tickInactive();
+                            }
                         }
                         Platform.runLater(this::updateUI);
                     }
@@ -158,10 +162,11 @@ public class KawaiiPetApp extends Application {
         Button playBtn = new Button("🎮 Play"); playBtn.setOnAction(e -> handleAction("play"));
         Button sleepBtn = new Button("😴 Sleep/Wake"); sleepBtn.setOnAction(e -> handleAction("sleep"));
         Button skillBtn = new Button("✨ Special"); skillBtn.setOnAction(e -> handleAction("skill"));
+        Button renameBtn = new Button("Rename"); renameBtn.setOnAction(e -> renameSelectedPet());
 
         feedBtn.setStyle(ACTION_BTN_STYLE); playBtn.setStyle(ACTION_BTN_STYLE);
-        sleepBtn.setStyle(ACTION_BTN_STYLE); skillBtn.setStyle(ACTION_BTN_STYLE);
-        actions.getChildren().addAll(feedBtn, playBtn, sleepBtn, skillBtn);
+        sleepBtn.setStyle(ACTION_BTN_STYLE); skillBtn.setStyle(ACTION_BTN_STYLE); renameBtn.setStyle(ACTION_BTN_STYLE);
+        actions.getChildren().addAll(feedBtn, playBtn, sleepBtn, skillBtn, renameBtn);
 
         rightPanel.getChildren().addAll(header, new Separator(), bars, new Separator(), actions);
         mainContent.getChildren().addAll(leftPanel, rightPanel);
@@ -203,6 +208,25 @@ public class KawaiiPetApp extends Application {
         updateUI();
     }
 
+    private void renameSelectedPet() {
+        if (selectedPet == null) return;
+
+        TextInputDialog dialog = new TextInputDialog(selectedPet.getName());
+        dialog.setTitle("Rename Pet");
+        dialog.setHeaderText("Enter an English name");
+        dialog.setContentText("Name:");
+
+        dialog.showAndWait().ifPresent(newName -> {
+            try {
+                selectedPet.setName(newName);
+                statusMsg.setText("Renamed pet to " + selectedPet.getName());
+                updateUI();
+            } catch (IllegalArgumentException ex) {
+                statusMsg.setText("Pet name must use English letters and spaces only.");
+            }
+        });
+    }
+
     private void updateUI() {
         if (selectedPet != null) {
             hpBar.setProgress(selectedPet.getHp() / 100.0);
@@ -227,6 +251,21 @@ public class KawaiiPetApp extends Application {
             petObservableList.add(p.getEmoji() + " " + p.getName() + " (Lv." + p.getLevel() + ")");
         }
         coinLabel.setText("Coins: " + currentInventory.getCoins());
+
+        String careAlert = getCareAlertText();
+        if (!careAlert.isEmpty()) {
+            statusMsg.setText(careAlert);
+        }
+    }
+
+    private String getCareAlertText() {
+        for (AbstractPet pet : currentInventory.getAllPets()) {
+            if (pet.needsCareAlert()) {
+                return pet.getCareAlertText();
+            }
+        }
+
+        return "";
     }
 
     private void openGachaWindow() {

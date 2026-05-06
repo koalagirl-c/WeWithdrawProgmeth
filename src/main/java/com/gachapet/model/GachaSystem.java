@@ -36,19 +36,19 @@ public class GachaSystem {
 
     /** รายชื่อสุ่มสำหรับแมว */
     private static final String[] CAT_NAMES = {
-            "มิ้นต์", "ลูก้า", "ซากุระ", "โมจิ", "พัมกิ้น",
+            "Mint", "Luca", "Sakura", "Mochi", "Pumpkin",
             "Nala", "Luna", "Bella", "Cleo", "Kitty"
     };
 
     /** รายชื่อสุ่มสำหรับสุนัข */
     private static final String[] DOG_NAMES = {
-            "โชโก", "มาร์โก้", "โบล่า", "บัดดี้", "คูกี้",
-            "Max", "Buddy", "Rocky", "Bear", "Duke"
+            "Choco", "Marco", "Bola", "Buddy", "Cookie",
+            "Max", "Rocky", "Bear", "Duke", "Bailey"
     };
 
     /** รายชื่อสุ่มสำหรับสัตว์ในตำนาน */
     private static final String[] MYTHIC_NAMES = {
-            "อาเธอร์", "เซลีน", "ไลล่า", "ออโรร่า", "นีโอ",
+            "Arthur", "Selene", "Lyla", "Aurora", "Neo",
             "Seraphim", "Celestia", "Nexus", "Astra", "Orion"
     };
 

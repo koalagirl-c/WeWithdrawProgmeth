@@ -16,6 +16,12 @@ public abstract class AbstractPet implements Actionable, Serializable {
     public static final int MAX_ENERGY = 100;
     public static final int MAX_LEVEL = 50;
 
+    private static final int ACTIVE_DECAY_INTERVAL_SECONDS = 30;
+    private static final int INACTIVE_DECAY_INTERVAL_SECONDS = 60;
+    private static final int SLEEP_ENERGY_INTERVAL_SECONDS = 8;
+    private static final int SLEEP_HUNGER_INTERVAL_SECONDS = 45;
+    private static final String ENGLISH_NAME_PATTERN = "[A-Za-z ]+";
+
     private String name;
     private int hp;
     private int hunger;      // 100 = full, 0 = starving
@@ -24,6 +30,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
     private int level;
     private int experience;
     private int age;
+    private int inactiveAge;
     private boolean sleeping;
 
     public AbstractPet(String name) {
@@ -35,6 +42,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
         this.level = 1;
         this.experience = 0;
         this.age = 0;
+        this.inactiveAge = 0;
         this.sleeping = false;
     }
 
@@ -86,7 +94,13 @@ public abstract class AbstractPet implements Actionable, Serializable {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Pet name cannot be empty");
         }
-        this.name = name.trim();
+
+        String trimmedName = name.trim();
+        if (!trimmedName.matches(ENGLISH_NAME_PATTERN)) {
+            throw new IllegalArgumentException("Pet name must contain English letters and spaces only");
+        }
+
+        this.name = trimmedName;
     }
 
     public void setHp(int hp) {
@@ -204,20 +218,29 @@ public abstract class AbstractPet implements Actionable, Serializable {
         age++;
 
         if (sleeping) {
-            setEnergy(this.energy + 5);
-            setHunger(this.hunger - 2);
+            if (age % SLEEP_ENERGY_INTERVAL_SECONDS == 0) {
+                setEnergy(this.energy + 5);
+            }
+
+            if (age % SLEEP_HUNGER_INTERVAL_SECONDS == 0) {
+                setHunger(this.hunger - 1);
+            }
 
             if (this.energy >= MAX_ENERGY) {
                 sleeping = false;
                 System.out.println(name + " is fully rested!");
             }
         } else {
-            setHunger(this.hunger - getHungerDecayRate());
-            setHappiness(this.happiness - getHappinessDecayRate());
-            setEnergy(this.energy - getEnergyDecayRate());
+            if (age % ACTIVE_DECAY_INTERVAL_SECONDS == 0) {
+                setHunger(this.hunger - getHungerDecayRate());
+                setHappiness(this.happiness - getHappinessDecayRate());
+                setEnergy(this.energy - getEnergyDecayRate());
+            }
         }
 
-        updateHpByCondition();
+        if (age % ACTIVE_DECAY_INTERVAL_SECONDS == 0) {
+            updateHpByCondition();
+        }
     }
 
     /**
@@ -225,6 +248,59 @@ public abstract class AbstractPet implements Actionable, Serializable {
      */
     public void tick() {
         updateStatus();
+    }
+
+    /**
+     * ใช้กับสัตว์ที่ไม่ได้ถูกเลือกอยู่ ให้เวลายังเดินแต่ลดช้ากว่าตัวที่กำลังดูแล
+     */
+    public void tickInactive() {
+        if (!isAlive()) {
+            sleeping = false;
+            return;
+        }
+
+        inactiveAge++;
+
+        if (inactiveAge % INACTIVE_DECAY_INTERVAL_SECONDS == 0) {
+            setHunger(this.hunger - 1);
+            setHappiness(this.happiness - 1);
+            updateHpByCondition();
+        }
+    }
+
+    public boolean needsCareAlert() {
+        return isAlive() && (hunger <= 50 || happiness <= 50 || energy <= 50);
+    }
+
+    public String getCareAlertText() {
+        if (!needsCareAlert()) {
+            return "";
+        }
+
+        StringBuilder alert = new StringBuilder(getEmoji())
+                .append(" ")
+                .append(name)
+                .append(" needs care: ");
+
+        boolean hasPreviousStat = false;
+
+        if (hunger <= 50) {
+            alert.append("Hunger ").append(hunger).append("/100");
+            hasPreviousStat = true;
+        }
+
+        if (happiness <= 50) {
+            if (hasPreviousStat) alert.append(", ");
+            alert.append("Happiness ").append(happiness).append("/100");
+            hasPreviousStat = true;
+        }
+
+        if (energy <= 50) {
+            if (hasPreviousStat) alert.append(", ");
+            alert.append("Energy ").append(energy).append("/100");
+        }
+
+        return alert.toString();
     }
 
     private void updateHpByCondition() {
@@ -286,15 +362,15 @@ public abstract class AbstractPet implements Actionable, Serializable {
     // ==================== Decay Rate Methods ====================
 
     protected int getHungerDecayRate() {
-        return 5;
+        return 2;
     }
 
     protected int getHappinessDecayRate() {
-        return 3;
+        return 1;
     }
 
     protected int getEnergyDecayRate() {
-        return 2;
+        return 1;
     }
 
     // ==================== Abstract Methods ====================

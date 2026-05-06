@@ -103,7 +103,7 @@ class InventoryTest {
     @DisplayName("addPet() should reject pets when inventory is full")
     void testAddPetWhenInventoryFull() {
         for (int i = 0; i < UserInventory.MAX_PET_CAPACITY; i++) {
-            assertTrue(inventory.addPet(new Cat("Cat" + i)));
+            assertTrue(inventory.addPet(new Cat("Cat Pet " + (char) ('A' + (i % 26)))));
         }
 
         boolean result = inventory.addPet(new Dog("ExtraDog"));

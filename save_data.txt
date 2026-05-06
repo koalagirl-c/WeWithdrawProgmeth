@@ -1,2 +1,3 @@
 PLAYER_NAME:Player
 COINS:500
+PET:CAT,Mochi,100,88,88,92,1,0,false
