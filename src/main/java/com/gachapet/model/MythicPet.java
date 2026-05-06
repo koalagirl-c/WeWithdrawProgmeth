@@ -7,9 +7,9 @@ package com.gachapet.model;
  *
  * <p>คุณสมบัติพิเศษของสัตว์ในตำนาน:</p>
  * <ul>
- *   <li>ค่าความหิวลดช้ามาก (อึดทน)</li>
- *   <li>สามารถฟื้น HP ของตัวเองได้ (ความสามารถพิเศษ)</li>
- *   <li>ได้รับ EXP เพิ่มสองเท่าจากทุกกิจกรรม</li>
+ *   <li>ค่าความอิ่มลดช้ามาก เพราะอึดทน</li>
+ *   <li>ฟื้น HP ของตัวเองได้</li>
+ *   <li>ได้รับ EXP เพิ่มสองเท่าจากกิจกรรมหลัก</li>
  *   <li>การกระทำพิเศษ: ใช้พลังเวทมนตร์ฟื้นฟู HP เต็ม</li>
  * </ul>
  */
@@ -18,8 +18,11 @@ public class MythicPet extends AbstractPet {
     /** ตัวคูณ EXP ที่สัตว์ในตำนานได้รับ */
     private static final double MYTHIC_EXP_MULTIPLIER = 2.0;
 
-    /** อัตราการลดความหิวของสัตว์ในตำนานต่อ tick (ช้ามาก) */
+    /** อัตราการลดค่าความอิ่มของสัตว์ในตำนานต่อ tick */
     private static final int MYTHIC_HUNGER_DECAY = 1;
+
+    /** จำนวน Ultimate Charge สูงสุด */
+    private static final int MAX_ULTIMATE_CHARGES = 3;
 
     /** จำนวนครั้งที่ยังสามารถใช้ Ultimate Skill ได้ */
     private int ultimateCharges;
@@ -31,39 +34,45 @@ public class MythicPet extends AbstractPet {
      */
     public MythicPet(String name) {
         super(name);
-        this.ultimateCharges = 3; // เริ่มต้นมี 3 ครั้ง
+        this.ultimateCharges = MAX_ULTIMATE_CHARGES;
     }
 
     /**
      * Override: สัตว์ในตำนานกินอาหารแล้วได้ EXP สองเท่า
-     * Polymorphism: เมธอด eat() ที่ทรงพลังที่สุด
      *
-     * @param amount จำนวนที่ต้องการเพิ่มค่าความหิว
+     * @param amount จำนวนที่ต้องการเพิ่มค่าความอิ่ม
      */
     @Override
     public void eat(int amount) {
-        setHunger(getHunger() + amount);
-        setHp(getHp() + (amount / 4));
-        gainExperience((int)(2 * MYTHIC_EXP_MULTIPLIER)); // EXP สองเท่า
+        if (!canDoAction()) return;
+
+        setHunger(getHunger() + amount + 10);
+        setHp(getHp() + amount / 4);
+        setHappiness(getHappiness() + 5);
+        gainExperience((int) (2 * MYTHIC_EXP_MULTIPLIER));
+
         System.out.println(getName() + " รับพลังงานจากอาหารเวทมนตร์ ✨🌟");
     }
 
     /**
-     * Override: สัตว์ในตำนานเล่นแล้วได้ EXP สองเท่า และลดความหิวน้อยมาก
-     * Polymorphism: เมธอด play() ที่ทรงพลังที่สุด
+     * Override: สัตว์ในตำนานเล่นแล้วได้ EXP สองเท่า และใช้พลังงานน้อย
      */
     @Override
     public void play() {
-        setHunger(getHunger() - 3); // ลดความหิวน้อยมาก
-        gainExperience((int)(5 * MYTHIC_EXP_MULTIPLIER)); // EXP สองเท่า
-        System.out.println(getName() + " เล่นอย่างลึกลับและน่าพิศวง! +EXP:" + (int)(5 * MYTHIC_EXP_MULTIPLIER));
+        if (!canDoAction()) return;
+
+        setHappiness(getHappiness() + 30);
+        setEnergy(getEnergy() - 8);
+        setHunger(getHunger() - 3);
+        gainExperience((int) (5 * MYTHIC_EXP_MULTIPLIER));
+
+        System.out.println(getName() + " เล่นอย่างลึกลับและน่าพิศวง! +EXP:" + (int) (5 * MYTHIC_EXP_MULTIPLIER));
     }
 
     /**
-     * Override: กำหนดอัตราการลดความหิวเฉพาะของสัตว์ในตำนาน
-     * อึดทนมาก Hunger ลดช้าที่สุด
+     * Override: กำหนดอัตราการลดค่าความอิ่มเฉพาะของสัตว์ในตำนาน
      *
-     * @return อัตราการลดความหิวของสัตว์ในตำนานต่อ tick
+     * @return อัตราการลดค่าความอิ่มของสัตว์ในตำนานต่อ tick
      */
     @Override
     protected int getHungerDecayRate() {
@@ -71,26 +80,50 @@ public class MythicPet extends AbstractPet {
     }
 
     /**
+     * Override: ความสุขลดช้ากว่าสัตว์ทั่วไป
+     *
+     * @return อัตราการลด Happiness ต่อ tick
+     */
+    @Override
+    protected int getHappinessDecayRate() {
+        return 1;
+    }
+
+    /**
+     * Override: พลังงานลดช้ากว่าสัตว์ทั่วไป
+     *
+     * @return อัตราการลด Energy ต่อ tick
+     */
+    @Override
+    protected int getEnergyDecayRate() {
+        return 1;
+    }
+
+    /**
      * Ultimate Skill: ใช้พลังเวทมนตร์ฟื้นฟู HP เต็มหลอด
-     * สามารถใช้ได้เฉพาะเมื่อยังมี ultimateCharges เหลืออยู่
-     * Implement จาก Interface Actionable (Polymorphism)
+     * ถ้าไม่มี charge เหลือ จะทำสมาธิเพื่อรับ EXP แทน
      */
     @Override
     public void performAction() {
+        if (!canDoAction()) return;
+
         if (ultimateCharges > 0) {
-            setHp(MAX_HP); // ฟื้น HP เต็ม!
+            setHp(MAX_HP);
+            setHappiness(getHappiness() + 10);
+            setEnergy(getEnergy() + 10);
             ultimateCharges--;
-            System.out.println(getName() + " ใช้พลังเวทมนตร์ฟื้นฟู HP เต็มหลอด! 🌟 (เหลือ " + ultimateCharges + " ครั้ง)");
+
+            System.out.println(getName() + " ใช้พลังเวทมนตร์ฟื้นฟู HP เต็มหลอด! 🌟 เหลือ " + ultimateCharges + " ครั้ง");
         } else {
-            // ถ้าไม่มี Charge เหลือ ทำ Default Action แทน
             gainExperience(5);
-            System.out.println(getName() + " ไม่มีพลังงานเหลือแล้ว... ทำสมาธิแทน (+EXP:5)");
+            setHappiness(getHappiness() + 5);
+
+            System.out.println(getName() + " ไม่มีพลังงานเวทเหลือแล้ว... ทำสมาธิแทน +EXP:5");
         }
     }
 
     /**
      * เสียงร้องของสัตว์ในตำนาน
-     * Implement จาก Interface Actionable (Polymorphism)
      *
      * @return เสียงร้องอันลึกลับของสัตว์ในตำนาน
      */
@@ -109,12 +142,14 @@ public class MythicPet extends AbstractPet {
     }
 
     /**
-     * เติม Ultimate Charge (ใช้ได้เมื่อ Level Up)
+     * เติม Ultimate Charge
      *
      * @param amount จำนวน Charge ที่ต้องการเติม
      */
     public void addUltimateCharges(int amount) {
-        this.ultimateCharges = Math.min(this.ultimateCharges + amount, 5);
+        if (amount <= 0) return;
+
+        this.ultimateCharges = Math.min(this.ultimateCharges + amount, MAX_ULTIMATE_CHARGES);
     }
 
     /**
@@ -138,12 +173,22 @@ public class MythicPet extends AbstractPet {
     }
 
     /**
+     * ดึงสกิลพิเศษของ MythicPet
+     *
+     * @return รายละเอียดสกิลพิเศษ
+     */
+    @Override
+    public String getSpecialSkill() {
+        return "Ultimate Heal: ใช้พลังเวทฟื้น HP เต็ม และเพิ่ม Happiness/Energy";
+    }
+
+    /**
      * Override toString เพื่อแสดงข้อมูล Ultimate Charges เพิ่มเติม
      *
      * @return ข้อมูลสรุปของสัตว์ในตำนาน
      */
     @Override
     public String toString() {
-        return super.toString() + " | ⚡ Ultimate: " + ultimateCharges + "/3";
+        return super.toString() + " | ⚡ Ultimate: " + ultimateCharges + "/" + MAX_ULTIMATE_CHARGES;
     }
 }

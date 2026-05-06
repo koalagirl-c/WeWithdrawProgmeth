@@ -1,271 +1,348 @@
 package com.gachapet.model;
 
+import java.io.Serializable;
+
 /**
- * Abstract Class ที่เป็นแม่แบบ (Template) ของสัตว์เลี้ยงทุกตัวในเกม
- * ใช้ Encapsulation โดยทำให้ฟิลด์ทั้งหมดเป็น private และควบคุมผ่าน getter/setter
- * Subclass ทุกตัวต้อง extends คลาสนี้และ implement Interface Actionable
- *
- * <p>หลักการ OOP ที่ใช้:</p>
- * <ul>
- *   <li>Inheritance: คลาสลูก Cat, Dog, MythicPet จะ extends AbstractPet</li>
- *   <li>Encapsulation: ฟิลด์ทุกตัวเป็น private มี getter/setter พร้อม validation</li>
- *   <li>Abstraction: เมธอด makeSound() เป็น abstract บังคับให้คลาสลูก implement</li>
- * </ul>
+ * Abstract Class ที่เป็นแม่แบบของสัตว์เลี้ยงทุกตัวในเกม
+ * ใช้ Encapsulation, Inheritance, Abstraction, Polymorphism และ Interface
  */
-public abstract class AbstractPet implements Actionable {
+public abstract class AbstractPet implements Actionable, Serializable {
 
-    // ==================== Constants ====================
+    private static final long serialVersionUID = 1L;
 
-    /** ค่า HP สูงสุดที่สัตว์เลี้ยงสามารถมีได้ */
     public static final int MAX_HP = 100;
-
-    /** ค่าความหิวสูงสุด (100 = อิ่มมาก, 0 = หิวมาก) */
     public static final int MAX_HUNGER = 100;
-
-    /** ค่าระดับสูงสุดที่สัตว์เลี้ยง Level up ได้ */
+    public static final int MAX_HAPPINESS = 100;
+    public static final int MAX_ENERGY = 100;
     public static final int MAX_LEVEL = 50;
 
-    // ==================== Private Fields (Encapsulation) ====================
-
-    /** ชื่อของสัตว์เลี้ยง */
     private String name;
-
-    /** ค่าพลังชีวิต (HP) ของสัตว์เลี้ยง ระหว่าง 0 - 100 */
     private int hp;
-
-    /** ค่าความหิว: 100 = อิ่มสุด, 0 = หิวโซ */
-    private int hunger;
-
-    /** ระดับ (Level) ของสัตว์เลี้ยง */
+    private int hunger;      // 100 = อิ่มมาก, 0 = หิวมาก
+    private int happiness;   // 100 = มีความสุขมาก
+    private int energy;      // 100 = พลังงานเต็ม
     private int level;
-
-    /** ประสบการณ์สะสมเพื่อ Level up */
     private int experience;
+    private int age;
+    private boolean sleeping;
 
-    // ==================== Constructor ====================
-
-    /**
-     * Constructor สำหรับสร้างสัตว์เลี้ยงใหม่
-     *
-     * @param name ชื่อของสัตว์เลี้ยง ห้ามเป็น null หรือ empty
-     * @throws IllegalArgumentException ถ้า name เป็น null หรือว่างเปล่า
-     */
     public AbstractPet(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("ชื่อสัตว์เลี้ยงต้องไม่ว่างเปล่า!");
-        }
-        this.name = name;
-        this.hp = MAX_HP;         // เริ่มต้น HP เต็ม
-        this.hunger = MAX_HUNGER; // เริ่มต้นอิ่มสุด
+        setName(name);
+        this.hp = MAX_HP;
+        this.hunger = MAX_HUNGER;
+        this.happiness = MAX_HAPPINESS;
+        this.energy = MAX_ENERGY;
         this.level = 1;
         this.experience = 0;
+        this.age = 0;
+        this.sleeping = false;
     }
 
-    // ==================== Getters (Encapsulation) ====================
+    // ==================== Getters ====================
 
-    /**
-     * ดึงชื่อสัตว์เลี้ยง
-     * @return ชื่อสัตว์เลี้ยง
-     */
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    /**
-     * ดึงค่า HP ปัจจุบัน
-     * @return ค่า HP (0 - 100)
-     */
-    public int getHp() { return hp; }
+    public int getHp() {
+        return hp;
+    }
 
-    /**
-     * ดึงค่าความหิวปัจจุบัน
-     * @return ค่าความหิว (0 = หิวมาก, 100 = อิ่มมาก)
-     */
-    public int getHunger() { return hunger; }
+    public int getHunger() {
+        return hunger;
+    }
 
-    /**
-     * ดึง Level ปัจจุบัน
-     * @return Level ของสัตว์เลี้ยง
-     */
-    public int getLevel() { return level; }
+    public int getHappiness() {
+        return happiness;
+    }
 
-    /**
-     * ดึงค่าประสบการณ์สะสม
-     * @return ค่า Experience
-     */
-    public int getExperience() { return experience; }
+    public int getEnergy() {
+        return energy;
+    }
 
-    // ==================== Setters with Validation (Encapsulation) ====================
+    public int getLevel() {
+        return level;
+    }
 
-    /**
-     * ตั้งชื่อสัตว์เลี้ยง
-     * @param name ชื่อใหม่ที่ต้องการตั้ง
-     * @throws IllegalArgumentException ถ้า name เป็น null หรือว่างเปล่า
-     */
+    public int getExperience() {
+        return experience;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public boolean isSleeping() {
+        return sleeping;
+    }
+
+    public boolean isAlive() {
+        return hp > 0;
+    }
+
+    // ==================== Setters ====================
+
     public void setName(String name) {
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("ชื่อสัตว์เลี้ยงต้องไม่ว่างเปล่า!");
+            throw new IllegalArgumentException("ชื่อสัตว์เลี้ยงต้องไม่ว่างเปล่า");
         }
-        this.name = name;
+        this.name = name.trim();
     }
 
-    /**
-     * ตั้งค่า HP พร้อม Validation ป้องกันค่าเกินขอบเขต
-     * Encapsulation: ห้ามให้ HP ติดลบหรือเกิน MAX_HP
-     *
-     * @param hp ค่า HP ที่ต้องการตั้ง
-     */
     public void setHp(int hp) {
-        // Boundary check: ป้องกัน HP ติดลบหรือเกิน MAX
-        this.hp = Math.max(0, Math.min(hp, MAX_HP));
+        this.hp = clamp(hp, 0, MAX_HP);
     }
 
-    /**
-     * ตั้งค่าความหิวพร้อม Validation ป้องกันค่าเกินขอบเขต
-     * Encapsulation: ห้ามให้ Hunger ติดลบหรือเกิน MAX_HUNGER
-     *
-     * @param hunger ค่าความหิวที่ต้องการตั้ง
-     */
     public void setHunger(int hunger) {
-        this.hunger = Math.max(0, Math.min(hunger, MAX_HUNGER));
+        this.hunger = clamp(hunger, 0, MAX_HUNGER);
     }
 
-    /**
-     * ตั้ง Level พร้อม Validation
-     * @param level Level ที่ต้องการตั้ง
-     */
+    public void setHappiness(int happiness) {
+        this.happiness = clamp(happiness, 0, MAX_HAPPINESS);
+    }
+
+    public void setEnergy(int energy) {
+        this.energy = clamp(energy, 0, MAX_ENERGY);
+    }
+
     public void setLevel(int level) {
-        this.level = Math.max(1, Math.min(level, MAX_LEVEL));
+        this.level = clamp(level, 1, MAX_LEVEL);
     }
 
-    // ==================== Concrete Methods (ใช้ร่วมกันได้ทุกคลาสลูก) ====================
+    public void setSleeping(boolean sleeping) {
+        if (!isAlive()) {
+            this.sleeping = false;
+            return;
+        }
+        this.sleeping = sleeping;
+    }
 
-    /**
-     * ให้อาหารสัตว์เลี้ยง เพิ่มค่าความหิวและ HP เล็กน้อย
-     * คลาสลูกสามารถ Override เมธอดนี้ได้เพื่อเปลี่ยนพฤติกรรม (Polymorphism)
-     *
-     * @param amount จำนวนที่ต้องการเพิ่มค่าความหิว (1-50)
-     */
+    private int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(value, max));
+    }
+
+    // ==================== Shared Logic ====================
+
+    protected boolean canDoAction() {
+        return isAlive() && !sleeping;
+    }
+
+    @Override
     public void eat(int amount) {
+        if (!canDoAction()) return;
+
         setHunger(this.hunger + amount);
-        // กินอาหารแล้วฟื้น HP เล็กน้อย
-        setHp(this.hp + (amount / 5));
+        setHp(this.hp + amount / 5);
+        setHappiness(this.happiness + 2);
         gainExperience(2);
+
         System.out.println(name + " กินอาหาร +Hunger:" + amount);
     }
 
-    /**
-     * เล่นกับสัตว์เลี้ยง ลดความหิวแต่เพิ่ม Experience
-     * คลาสลูกสามารถ Override เมธอดนี้ได้เพื่อเปลี่ยน bonus ที่ได้รับ
-     */
+    @Override
     public void play() {
-        setHunger(this.hunger - 10); // เล่นแล้วหิว
+        if (!canDoAction()) return;
+
+        setHappiness(this.happiness + 15);
+        setEnergy(this.energy - 10);
+        setHunger(this.hunger - 10);
         gainExperience(5);
-        System.out.println(name + " เล่นสนุก! -Hunger:10 +EXP:5");
+
+        System.out.println(name + " เล่นสนุก! +Happiness:15 -Energy:10 -Hunger:10");
     }
 
-    /**
-     * เพิ่ม Experience และตรวจสอบการ Level up
-     *
-     * @param amount จำนวน Experience ที่จะเพิ่ม
-     */
+    @Override
+    public void sleep() {
+        if (!isAlive()) return;
+
+        this.sleeping = true;
+        System.out.println(name + " กำลังนอนหลับ...");
+    }
+
+    @Override
+    public void wakeUp() {
+        if (!isAlive()) return;
+
+        this.sleeping = false;
+        System.out.println(name + " ตื่นแล้ว!");
+    }
+
     public void gainExperience(int amount) {
+        if (amount <= 0 || !isAlive()) return;
+
         this.experience += amount;
-        // ทุก 100 EXP = Level Up 1 ครั้ง
+
         int expNeeded = level * 100;
-        if (this.experience >= expNeeded && this.level < MAX_LEVEL) {
+
+        while (this.experience >= expNeeded && this.level < MAX_LEVEL) {
+            this.experience -= expNeeded;
             this.level++;
-            this.experience = 0;
+
+            setHp(this.hp + 10);
+            setHappiness(this.happiness + 5);
+
             System.out.println("🎉 " + name + " Level Up! ตอนนี้ Level " + this.level);
+
+            expNeeded = level * 100;
+        }
+
+        if (this.level >= MAX_LEVEL) {
+            this.level = MAX_LEVEL;
+            this.experience = 0;
         }
     }
 
     /**
-     * ตรวจสอบว่าสัตว์เลี้ยงยังมีชีวิตอยู่หรือไม่
-     *
-     * @return true ถ้า HP > 0
-     */
-    public boolean isAlive() {
-        return this.hp > 0;
-    }
-
-    /**
-     * อัปเดตสถานะสัตว์เลี้ยงตามเวลาที่ผ่านไป (เรียกทุก tick)
-     * ลดค่าความหิวทีละนิด ถ้าหิวมากจะลด HP ด้วย
+     * ใช้ให้ Thread หรือ GameLoop เรียกทุก ๆ 1 วินาที
      */
     public void updateStatus() {
-        // ลดความหิวตามเวลา (แต่ละ Subclass override ได้)
-        int hungerDecay = getHungerDecayRate();
-        setHunger(this.hunger - hungerDecay);
+        if (!isAlive()) {
+            sleeping = false;
+            return;
+        }
 
-        // ถ้าหิวจัด (Hunger < 20) HP จะลดด้วย
-        if (this.hunger < 20) {
-            setHp(this.hp - 3);
+        age++;
+
+        if (sleeping) {
+            setEnergy(this.energy + 5);
+            setHunger(this.hunger - 2);
+
+            if (this.energy >= MAX_ENERGY) {
+                sleeping = false;
+                System.out.println(name + " นอนเต็มอิ่มแล้ว!");
+            }
+        } else {
+            setHunger(this.hunger - getHungerDecayRate());
+            setHappiness(this.happiness - getHappinessDecayRate());
+            setEnergy(this.energy - getEnergyDecayRate());
+        }
+
+        updateHpByCondition();
+    }
+
+    /**
+     * alias สำหรับเรียกสั้น ๆ จาก GameLoop
+     */
+    public void tick() {
+        updateStatus();
+    }
+
+    private void updateHpByCondition() {
+        int damage = 0;
+
+        if (hunger < 20) {
+            damage += 3;
+        }
+
+        if (happiness < 20) {
+            damage += 2;
+        }
+
+        if (energy < 10) {
+            damage += 2;
+        }
+
+        if (damage > 0) {
+            setHp(this.hp - damage);
+        } else if (hunger > 60 && happiness > 60 && energy > 60) {
+            setHp(this.hp + 1);
+        }
+
+        if (hp <= 0) {
+            hp = 0;
+            sleeping = false;
+            System.out.println("💀 " + name + " หมดแรงแล้ว... Game Over");
         }
     }
 
-    /**
-     * ดึงอัตราการลดของความหิวต่อ tick
-     * Subclass สามารถ Override เพื่อตั้งค่าเฉพาะของสายพันธุ์ได้
-     *
-     * @return อัตราการลดความหิว (หน่วยต่อ tick)
-     */
-    protected int getHungerDecayRate() {
-        return 5; // ค่า Default
+    public String getStatusText() {
+        if (!isAlive()) {
+            return "Game Over";
+        }
+
+        if (sleeping) {
+            return "กำลังนอนหลับ";
+        }
+
+        if (hp <= 30) {
+            return "สุขภาพแย่ ต้องดูแลด่วน";
+        }
+
+        if (hunger <= 30) {
+            return "หิวแล้ว";
+        }
+
+        if (happiness <= 30) {
+            return "เหงา อยากเล่นด้วย";
+        }
+
+        if (energy <= 30) {
+            return "เหนื่อย อยากพัก";
+        }
+
+        return "สบายดี";
     }
 
-    // ==================== Abstract Methods (บังคับให้ Subclass Implement) ====================
+    // ==================== Decay Rate Methods ====================
 
-    /**
-     * ดึงชนิดของสัตว์เลี้ยง (เช่น "แมว", "สุนัข", "สัตว์ในตำนาน")
-     * ทุก Subclass ต้อง implement เมธอดนี้
-     *
-     * @return String ชนิดของสัตว์เลี้ยง
-     */
+    protected int getHungerDecayRate() {
+        return 5;
+    }
+
+    protected int getHappinessDecayRate() {
+        return 3;
+    }
+
+    protected int getEnergyDecayRate() {
+        return 2;
+    }
+
+    // ==================== Abstract Methods ====================
+
     public abstract String getPetType();
 
-    /**
-     * ดึงชื่อ Emoji ของสัตว์เลี้ยงเพื่อแสดงใน UI
-     *
-     * @return String emoji ของสัตว์เลี้ยง
-     */
     public abstract String getEmoji();
 
-    // ==================== Override Interface Methods ====================
-
-    /**
-     * ให้สัตว์เลี้ยงส่งเสียงร้อง (จาก Interface Actionable)
-     * ทุก Subclass ต้อง Override เมธอดนี้
-     *
-     * @return เสียงร้องของสัตว์เลี้ยง
-     */
     @Override
     public abstract String makeSound();
 
-    /**
-     * การกระทำพิเศษเฉพาะของสัตว์เลี้ยงแต่ละสายพันธุ์ (จาก Interface Actionable)
-     */
     @Override
     public abstract void performAction();
 
-    // ==================== toString ====================
+    @Override
+    public abstract String getSpecialSkill();
 
-    /**
-     * แสดงข้อมูลสัตว์เลี้ยงในรูปแบบ String
-     *
-     * @return ข้อมูลสรุปของสัตว์เลี้ยง
-     */
     @Override
     public String toString() {
-        return String.format("%s %s (Lv.%d) | HP: %d/%d | Hunger: %d/%d",
-                getEmoji(), name, level, hp, MAX_HP, hunger, MAX_HUNGER);
+        return String.format(
+                "%s %s (Lv.%d) | HP: %d/%d | Hunger: %d/%d | Happiness: %d/%d | Energy: %d/%d | EXP: %d",
+                getEmoji(),
+                name,
+                level,
+                hp,
+                MAX_HP,
+                hunger,
+                MAX_HUNGER,
+                happiness,
+                MAX_HAPPINESS,
+                energy,
+                MAX_ENERGY,
+                experience
+        );
     }
 
-    /**
-     * แปลงข้อมูลสัตว์เลี้ยงเป็นรูปแบบ CSV สำหรับบันทึกไฟล์
-     *
-     * @return String ในรูปแบบ CSV
-     */
     public String toCsvString() {
-        return String.format("%s,%s,%d,%d,%d,%d",
-                getPetType(), name, hp, hunger, level, experience);
+        return String.format(
+                "%s,%s,%d,%d,%d,%d,%d,%d,%b",
+                getPetType(),
+                name,
+                hp,
+                hunger,
+                happiness,
+                energy,
+                level,
+                experience,
+                sleeping
+        );
     }
 }

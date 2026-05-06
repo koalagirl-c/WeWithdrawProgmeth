@@ -1,46 +1,47 @@
 package com.gachapet.data;
 
 import com.gachapet.model.AbstractPet;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * คลาสจัดการกระเป๋าสัตว์เลี้ยงและทรัพยากรของผู้เล่น
- * เก็บรายการสัตว์เลี้ยงทั้งหมดและจำนวนเหรียญ
+ * Manages the player's pet collection and coins.
  *
- * <p>ใช้ ArrayList ในการเก็บ AbstractPet ทำให้ใช้ Polymorphism ได้เต็มที่:
- * เก็บ Cat, Dog, และ MythicPet ใน List เดียวกันได้</p>
+ * <p>This class uses ArrayList<AbstractPet> to support polymorphism.
+ * It can store Cat, Dog, MythicPet, or any other subclass of AbstractPet
+ * in the same list.</p>
  */
 public class UserInventory {
 
     // ==================== Constants ====================
 
-    /** เหรียญเริ่มต้นที่ผู้เล่นได้รับ */
+    /** The number of coins the player starts with. */
     public static final int STARTING_COINS = 500;
 
-    /** จำนวนสัตว์เลี้ยงสูงสุดที่เก็บได้ */
+    /** The maximum number of pets the player can own. */
     public static final int MAX_PET_CAPACITY = 30;
 
     // ==================== Fields ====================
 
-    /** รายการสัตว์เลี้ยงทั้งหมด (ใช้ ArrayList) */
-    private ArrayList<AbstractPet> pets;
+    /** The player's pet collection. */
+    private final ArrayList<AbstractPet> pets;
 
-    /** จำนวนเหรียญของผู้เล่น */
+    /** The player's current coin balance. */
     private int coins;
 
-    /** ชื่อของผู้เล่น */
+    /** The player's display name. */
     private String playerName;
 
     // ==================== Constructor ====================
 
     /**
-     * สร้าง UserInventory ใหม่สำหรับผู้เล่น
+     * Creates a new inventory for a player.
      *
-     * @param playerName ชื่อของผู้เล่น
+     * @param playerName the player's name
      */
     public UserInventory(String playerName) {
-        this.playerName = playerName;
+        setPlayerName(playerName);
         this.pets = new ArrayList<>();
         this.coins = STARTING_COINS;
     }
@@ -48,154 +49,227 @@ public class UserInventory {
     // ==================== Pet Management ====================
 
     /**
-     * เพิ่มสัตว์เลี้ยงเข้ากระเป๋า
-     * ใช้ Polymorphism: รับ AbstractPet แต่ Object จริงอาจเป็น Cat, Dog หรือ MythicPet
+     * Adds a pet to the inventory.
      *
-     * @param pet สัตว์เลี้ยงที่ต้องการเพิ่ม
-     * @return true ถ้าเพิ่มสำเร็จ, false ถ้ากระเป๋าเต็ม
+     * <p>Polymorphism is used here because the method accepts AbstractPet,
+     * but the actual object can be Cat, Dog, MythicPet, or another subclass.</p>
+     *
+     * @param pet the pet to add
+     * @return true if the pet was added successfully, false otherwise
      */
     public boolean addPet(AbstractPet pet) {
-        if (pets.size() >= MAX_PET_CAPACITY) {
-            System.out.println("❌ กระเป๋าเต็มแล้ว! (" + MAX_PET_CAPACITY + "/" + MAX_PET_CAPACITY + ")");
-            return false;
-        }
         if (pet == null) {
+            System.out.println("Cannot add pet: pet is null.");
             return false;
         }
+
+        if (pets.size() >= MAX_PET_CAPACITY) {
+            System.out.println("Pet inventory is full! (" + pets.size() + "/" + MAX_PET_CAPACITY + ")");
+            return false;
+        }
+
         pets.add(pet);
-        System.out.println("✅ ได้รับ " + pet.getEmoji() + " " + pet.getName() + " แล้ว!");
+        System.out.println("You received " + pet.getEmoji() + " " + pet.getName() + "!");
         return true;
     }
 
     /**
-     * ลบสัตว์เลี้ยงออกจากกระเป๋าตาม Index
+     * Removes a pet from the inventory by index.
      *
-     * @param index ตำแหน่งของสัตว์เลี้ยงใน List
-     * @return AbstractPet ที่ถูกลบออก, หรือ null ถ้า Index ไม่ถูกต้อง
+     * @param index the index of the pet
+     * @return the removed pet, or null if the index is invalid
      */
     public AbstractPet removePet(int index) {
-        if (index < 0 || index >= pets.size()) {
+        if (!isValidIndex(index)) {
+            System.out.println("Remove failed: invalid pet index " + index + ".");
             return null;
         }
-        return pets.remove(index);
+
+        AbstractPet removedPet = pets.remove(index);
+        System.out.println("Removed pet: " + removedPet.getName() + ".");
+        return removedPet;
     }
 
     /**
-     * ดึงสัตว์เลี้ยงตาม Index
+     * Gets a pet by index.
      *
-     * @param index ตำแหน่งใน List
-     * @return AbstractPet ที่ตำแหน่งนั้น, หรือ null ถ้า Index ไม่ถูกต้อง
+     * @param index the index of the pet
+     * @return the pet at the given index, or null if the index is invalid
      */
     public AbstractPet getPet(int index) {
-        if (index < 0 || index >= pets.size()) {
+        if (!isValidIndex(index)) {
             return null;
         }
+
         return pets.get(index);
     }
 
     /**
-     * ดึง List สัตว์เลี้ยงทั้งหมด (คืนเป็น copy เพื่อป้องกัน Encapsulation leak)
+     * Returns a copy of all pets to protect encapsulation.
      *
-     * @return List ของ AbstractPet ทั้งหมด
+     * @return a copy of the pet list
      */
     public List<AbstractPet> getAllPets() {
-        return new ArrayList<>(pets); // คืน copy ป้องกันการแก้ไขโดยตรง
+        return new ArrayList<>(pets);
     }
 
     /**
-     * ดึงจำนวนสัตว์เลี้ยงทั้งหมดในกระเป๋า
+     * Returns the number of pets in the inventory.
      *
-     * @return จำนวนสัตว์เลี้ยง
+     * @return the pet count
      */
     public int getPetCount() {
         return pets.size();
     }
 
+    /**
+     * Checks whether the inventory is full.
+     *
+     * @return true if the inventory is full
+     */
+    public boolean isFull() {
+        return pets.size() >= MAX_PET_CAPACITY;
+    }
+
+    /**
+     * Checks whether the inventory is empty.
+     *
+     * @return true if the inventory has no pets
+     */
+    public boolean isEmpty() {
+        return pets.isEmpty();
+    }
+
+    /**
+     * Checks whether an index points to an existing pet.
+     *
+     * @param index the index to check
+     * @return true if the index is valid
+     */
+    public boolean isValidIndex(int index) {
+        return index >= 0 && index < pets.size();
+    }
+
     // ==================== Coin Management ====================
 
     /**
-     * ดึงจำนวนเหรียญปัจจุบัน
+     * Gets the player's current coin balance.
      *
-     * @return จำนวนเหรียญ
+     * @return the current number of coins
      */
     public int getCoins() {
         return coins;
     }
 
     /**
-     * เพิ่มเหรียญ
+     * Sets the player's coin balance.
      *
-     * @param amount จำนวนเหรียญที่ต้องการเพิ่ม (ต้องมากกว่า 0)
+     * @param coins the new coin amount
      */
-    public void addCoins(int amount) {
-        if (amount > 0) {
-            this.coins += amount;
-        }
+    public void setCoins(int coins) {
+        this.coins = Math.max(0, coins);
     }
 
     /**
-     * ลดเหรียญ (ใช้เงิน)
+     * Adds coins to the player's balance.
      *
-     * @param amount จำนวนเหรียญที่ต้องการใช้
-     * @return true ถ้ามีเงินพอและหักสำเร็จ, false ถ้าเงินไม่พอ
+     * @param amount the amount to add
+     */
+    public void addCoins(int amount) {
+        if (amount <= 0) {
+            System.out.println("Add coins failed: amount must be greater than 0.");
+            return;
+        }
+
+        this.coins += amount;
+        System.out.println("Added " + amount + " coins. Current balance: " + coins + ".");
+    }
+
+    /**
+     * Spends coins from the player's balance.
+     *
+     * @param amount the amount to spend
+     * @return true if the player had enough coins and the coins were spent successfully
      */
     public boolean spendCoins(int amount) {
-        if (amount <= 0) return false;
-        if (this.coins < amount) {
-            System.out.println("❌ เหรียญไม่พอ! มี " + coins + " ต้องการ " + amount);
+        if (amount <= 0) {
+            System.out.println("Spend coins failed: amount must be greater than 0.");
             return false;
         }
+
+        if (this.coins < amount) {
+            System.out.println("Not enough coins! Current: " + coins + ", required: " + amount + ".");
+            return false;
+        }
+
         this.coins -= amount;
+        System.out.println("Spent " + amount + " coins. Current balance: " + coins + ".");
         return true;
     }
 
     /**
-     * ตรวจสอบว่ามีเหรียญเพียงพอหรือไม่
+     * Checks whether the player has enough coins.
      *
-     * @param amount จำนวนที่ต้องการตรวจสอบ
-     * @return true ถ้ามีเหรียญเพียงพอ
+     * @param amount the required amount
+     * @return true if the player has enough coins
      */
     public boolean hasEnoughCoins(int amount) {
-        return this.coins >= amount;
+        return amount >= 0 && this.coins >= amount;
     }
 
-    // ==================== Getters ====================
+    // ==================== Player Name ====================
 
     /**
-     * ดึงชื่อผู้เล่น
+     * Gets the player's name.
      *
-     * @return ชื่อผู้เล่น
+     * @return the player's name
      */
     public String getPlayerName() {
         return playerName;
     }
 
     /**
-     * ตั้งชื่อผู้เล่น
+     * Sets the player's name.
      *
-     * @param playerName ชื่อใหม่
+     * @param playerName the new player name
      */
     public void setPlayerName(String playerName) {
-        this.playerName = playerName;
+        if (playerName == null || playerName.trim().isEmpty()) {
+            this.playerName = "Player";
+        } else {
+            this.playerName = playerName.trim();
+        }
     }
 
+    // ==================== Package Internal Access ====================
+
     /**
-     * ดึง Reference ของ ArrayList โดยตรง (สำหรับใช้ภายใน package เท่านั้น)
+     * Returns the internal pet list.
      *
-     * @return ArrayList ของ AbstractPet
+     * <p>This method is package-private and should only be used by classes
+     * in the data package when direct access is necessary.</p>
+     *
+     * @return the internal ArrayList of pets
      */
     ArrayList<AbstractPet> getPetsInternal() {
         return pets;
     }
 
+    // ==================== Summary ====================
+
     /**
-     * แสดงสรุปข้อมูลกระเป๋า
+     * Returns a short summary of the inventory.
      *
-     * @return String สรุปข้อมูล
+     * @return inventory summary
      */
     @Override
     public String toString() {
-        return String.format("👤 %s | 💰 %d เหรียญ | 🐾 สัตว์เลี้ยง %d/%d ตัว",
-                playerName, coins, pets.size(), MAX_PET_CAPACITY);
+        return String.format(
+                "Player: %s | Coins: %d | Pets: %d/%d",
+                playerName,
+                coins,
+                pets.size(),
+                MAX_PET_CAPACITY
+        );
     }
 }

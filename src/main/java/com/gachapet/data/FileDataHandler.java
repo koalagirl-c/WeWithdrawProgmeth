@@ -5,127 +5,121 @@ import com.gachapet.model.Cat;
 import com.gachapet.model.Dog;
 import com.gachapet.model.MythicPet;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * คลาสสำหรับบันทึกและโหลดข้อมูล UserInventory ลงไฟล์ .txt
- * ใช้ File I/O พื้นฐาน (BufferedReader / PrintWriter)
+ * Handles saving and loading UserInventory data to a text file.
  *
- * <p>รูปแบบไฟล์ save.txt:</p>
+ * <p>Save file format:</p>
  * <pre>
- * PLAYER_NAME:ชื่อผู้เล่น
- * COINS:จำนวนเหรียญ
- * PET:ชนิด,ชื่อ,hp,hunger,level,exp
- * PET:ชนิด,ชื่อ,hp,hunger,level,exp
- * ...
+ * PLAYER_NAME:PlayerName
+ * COINS:500
+ * PET:CAT,Luna,100,90,80,70,1,20,false
+ * PET:DOG,Buddy,95,85,90,60,2,40,false
  * </pre>
  */
 public class FileDataHandler {
 
-    /** ชื่อไฟล์ Save เริ่มต้น */
     private static final String DEFAULT_SAVE_FILE = "save_data.txt";
 
-    /** Prefix สำหรับบรรทัด Player Name */
     private static final String PREFIX_PLAYER = "PLAYER_NAME:";
-
-    /** Prefix สำหรับบรรทัด Coins */
     private static final String PREFIX_COINS = "COINS:";
-
-    /** Prefix สำหรับบรรทัดข้อมูลสัตว์เลี้ยง */
     private static final String PREFIX_PET = "PET:";
 
-    /** Path ของไฟล์ที่ใช้งาน */
     private final String filePath;
 
-    // ==================== Constructors ====================
-
-    /**
-     * สร้าง FileDataHandler ด้วยชื่อไฟล์ Default
-     */
     public FileDataHandler() {
         this.filePath = DEFAULT_SAVE_FILE;
     }
 
-    /**
-     * สร้าง FileDataHandler ด้วย Path ที่กำหนดเอง
-     *
-     * @param filePath Path ของไฟล์ที่ต้องการใช้
-     */
     public FileDataHandler(String filePath) {
         this.filePath = filePath;
     }
 
-    // ==================== Save / Load Methods ====================
-
     /**
-     * บันทึกข้อมูล UserInventory ลงไฟล์ .txt
-     * ใช้ PrintWriter สำหรับเขียนข้อมูลแบบ Text
+     * Saves the current user inventory to a text file.
      *
-     * @param inventory UserInventory ที่ต้องการบันทึก
-     * @return true ถ้าบันทึกสำเร็จ, false ถ้าเกิด Error
+     * @param inventory inventory to save
+     * @return true if saved successfully, false otherwise
      */
     public boolean saveData(UserInventory inventory) {
-        // ใช้ try-with-resources เพื่อให้ FileWriter ถูกปิดอัตโนมัติ
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+        if (inventory == null) {
+            System.err.println("Save failed: inventory is null.");
+            return false;
+        }
 
-            // เขียน Header ข้อมูลผู้เล่น
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
             writer.println(PREFIX_PLAYER + inventory.getPlayerName());
             writer.println(PREFIX_COINS + inventory.getCoins());
 
-            // วนเขียนข้อมูลสัตว์เลี้ยงแต่ละตัว (ใช้ Polymorphism: toCsvString() จาก AbstractPet)
             for (AbstractPet pet : inventory.getAllPets()) {
                 writer.println(PREFIX_PET + pet.toCsvString());
             }
 
-            System.out.println("✅ บันทึกข้อมูลสำเร็จ -> " + filePath);
+            System.out.println("Game saved successfully -> " + filePath);
             return true;
 
         } catch (IOException e) {
-            System.err.println("❌ บันทึกข้อมูลไม่สำเร็จ: " + e.getMessage());
+            System.err.println("Save failed: " + e.getMessage());
             return false;
         }
     }
 
     /**
-     * โหลดข้อมูลจากไฟล์ .txt และสร้าง UserInventory กลับมา
-     * ใช้ BufferedReader สำหรับอ่านข้อมูลแบบ Text
+     * Loads user inventory data from a text file.
      *
-     * @return UserInventory ที่โหลดมา, หรือ null ถ้าไม่พบไฟล์หรือเกิด Error
+     * @return loaded UserInventory, or null if no save file exists or loading fails
      */
     public UserInventory loadData() {
-        // ตรวจสอบว่าไฟล์มีอยู่จริงหรือไม่
-        if (!Files.exists(Paths.get(filePath))) {
-            System.out.println("⚠️ ไม่พบไฟล์ save: " + filePath);
+        Path path = Paths.get(filePath);
+
+        if (!Files.exists(path)) {
+            System.out.println("No save file found: " + filePath);
             return null;
         }
 
-        // ใช้ try-with-resources เพื่อให้ BufferedReader ถูกปิดอัตโนมัติ
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-
-            String playerName = "ผู้เล่น";
+            String playerName = "Player";
             int coins = UserInventory.STARTING_COINS;
             UserInventory inventory = null;
 
             String line;
+
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                if (line.isEmpty()) continue; // ข้ามบรรทัดว่าง
+
+                if (line.isEmpty()) {
+                    continue;
+                }
 
                 if (line.startsWith(PREFIX_PLAYER)) {
-                    playerName = line.substring(PREFIX_PLAYER.length());
+                    playerName = line.substring(PREFIX_PLAYER.length()).trim();
                     inventory = new UserInventory(playerName);
 
-                } else if (line.startsWith(PREFIX_COINS) && inventory != null) {
-                    coins = Integer.parseInt(line.substring(PREFIX_COINS.length()));
-                    // Reset coins แล้วตั้งค่าใหม่
-                    int diff = coins - inventory.getCoins();
-                    if (diff > 0) inventory.addCoins(diff);
+                } else if (line.startsWith(PREFIX_COINS)) {
+                    coins = Integer.parseInt(line.substring(PREFIX_COINS.length()).trim());
 
-                } else if (line.startsWith(PREFIX_PET) && inventory != null) {
-                    // แปลงข้อมูล CSV กลับเป็น Object
+                    if (inventory == null) {
+                        inventory = new UserInventory(playerName);
+                    }
+
+                    setInventoryCoins(inventory, coins);
+
+                } else if (line.startsWith(PREFIX_PET)) {
+                    if (inventory == null) {
+                        inventory = new UserInventory(playerName);
+                    }
+
                     AbstractPet pet = parsePetFromCsv(line.substring(PREFIX_PET.length()));
+
                     if (pet != null) {
                         inventory.addPet(pet);
                     }
@@ -133,89 +127,136 @@ public class FileDataHandler {
             }
 
             if (inventory != null) {
-                System.out.println("✅ โหลดข้อมูลสำเร็จ: " + inventory);
+                System.out.println("Game loaded successfully: " + inventory);
             }
+
             return inventory;
 
         } catch (IOException | NumberFormatException e) {
-            System.err.println("❌ โหลดข้อมูลไม่สำเร็จ: " + e.getMessage());
+            System.err.println("Load failed: " + e.getMessage());
             return null;
         }
     }
 
     /**
-     * ลบไฟล์ Save
+     * Deletes the save file.
      *
-     * @return true ถ้าลบสำเร็จ
+     * @return true if the file was deleted or did not exist
      */
     public boolean deleteSaveFile() {
         try {
-            return Files.deleteIfExists(Paths.get(filePath));
+            boolean deleted = Files.deleteIfExists(Paths.get(filePath));
+
+            if (deleted) {
+                System.out.println("Save file deleted successfully.");
+            } else {
+                System.out.println("No save file to delete.");
+            }
+
+            return true;
+
         } catch (IOException e) {
-            System.err.println("❌ ลบไฟล์ไม่สำเร็จ: " + e.getMessage());
+            System.err.println("Delete save file failed: " + e.getMessage());
             return false;
         }
     }
 
     /**
-     * ตรวจสอบว่าไฟล์ save มีอยู่หรือไม่
+     * Checks whether a save file exists.
      *
-     * @return true ถ้ามีไฟล์ save อยู่
+     * @return true if a save file exists
      */
     public boolean hasSaveFile() {
         return Files.exists(Paths.get(filePath));
     }
 
-    // ==================== Private Helper Methods ====================
-
     /**
-     * แปลงข้อมูล CSV String กลับเป็น AbstractPet Object
-     * ใช้ Factory Pattern โดยดูจาก petType
+     * Converts a CSV line into an AbstractPet object.
      *
-     * @param csvLine ข้อมูลในรูปแบบ "ชนิด,ชื่อ,hp,hunger,level,exp"
-     * @return AbstractPet Object, หรือ null ถ้า parse ไม่สำเร็จ
+     * <p>Supported format:</p>
+     * <pre>
+     * TYPE,NAME,HP,HUNGER,HAPPINESS,ENERGY,LEVEL,EXP,SLEEPING
+     * </pre>
+     *
+     * <p>Also supports old format:</p>
+     * <pre>
+     * TYPE,NAME,HP,HUNGER,LEVEL,EXP
+     * </pre>
+     *
+     * @param csvLine pet data line
+     * @return created AbstractPet object, or null if parsing fails
      */
     private AbstractPet parsePetFromCsv(String csvLine) {
         try {
             String[] parts = csvLine.split(",");
-            if (parts.length < 6) return null;
 
-            String petType = parts[0].trim();
-            String name    = parts[1].trim();
-            int hp         = Integer.parseInt(parts[2].trim());
-            int hunger     = Integer.parseInt(parts[3].trim());
-            int level      = Integer.parseInt(parts[4].trim());
-            int experience = Integer.parseInt(parts[5].trim());
-
-            // สร้าง Object ตามชนิดสัตว์เลี้ยง (Factory Pattern)
-            AbstractPet pet;
-            switch (petType) {
-                case "CAT":    pet = new Cat(name);       break;
-                case "DOG":    pet = new Dog(name);       break;
-                case "MYTHIC": pet = new MythicPet(name); break;
-                default:
-                    System.err.println("⚠️ ชนิดสัตว์เลี้ยงไม่รู้จัก: " + petType);
-                    return null;
+            if (parts.length < 6) {
+                System.err.println("Invalid pet data: " + csvLine);
+                return null;
             }
 
-            // คืนค่า State กลับไป
+            String petType = parts[0].trim();
+            String name = parts[1].trim();
+
+            AbstractPet pet = createPetByType(petType, name);
+
+            if (pet == null) {
+                System.err.println("Unknown pet type: " + petType);
+                return null;
+            }
+
+            int hp = Integer.parseInt(parts[2].trim());
+            int hunger = Integer.parseInt(parts[3].trim());
+
             pet.setHp(hp);
             pet.setHunger(hunger);
-            pet.setLevel(level);
+
+            if (parts.length >= 9) {
+                int happiness = Integer.parseInt(parts[4].trim());
+                int energy = Integer.parseInt(parts[5].trim());
+                int level = Integer.parseInt(parts[6].trim());
+                boolean sleeping = Boolean.parseBoolean(parts[8].trim());
+
+                pet.setHappiness(happiness);
+                pet.setEnergy(energy);
+                pet.setLevel(level);
+                pet.setSleeping(sleeping);
+
+            } else {
+                int level = Integer.parseInt(parts[4].trim());
+                pet.setLevel(level);
+            }
 
             return pet;
 
         } catch (NumberFormatException e) {
-            System.err.println("❌ Parse CSV ไม่สำเร็จ: " + csvLine);
+            System.err.println("Failed to parse pet data: " + csvLine);
             return null;
         }
     }
 
     /**
-     * ดึง Path ของไฟล์ที่ใช้งาน
-     *
-     * @return file path
+     * Factory method for creating pets by type.
      */
+    private AbstractPet createPetByType(String petType, String name) {
+        return switch (petType) {
+            case "CAT" -> new Cat(name);
+            case "DOG" -> new Dog(name);
+            case "MYTHIC" -> new MythicPet(name);
+            default -> null;
+        };
+    }
+
+    /**
+     * Updates inventory coins based on available UserInventory methods.
+     *
+     * <p>This version assumes UserInventory starts with STARTING_COINS
+     * and has addCoins(). If your UserInventory has setCoins(), use that instead.</p>
+     */
+    private void setInventoryCoins(UserInventory inventory, int targetCoins) {
+        inventory.setCoins(targetCoins);
+    }
+
     public String getFilePath() {
         return filePath;
     }
