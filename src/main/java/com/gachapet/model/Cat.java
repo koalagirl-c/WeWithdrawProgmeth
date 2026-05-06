@@ -6,9 +6,9 @@ package com.gachapet.model;
  *
  * <p>คุณสมบัติพิเศษของแมว:</p>
  * <ul>
- *   <li>ค่าความอิ่มลดช้ากว่าปกติ เพราะแมวกินน้อย</li>
- *   <li>เล่นแล้วได้ EXP เพิ่มพิเศษ</li>
- *   <li>การกระทำพิเศษ: ม้วนตัวนอน ฟื้น HP และ Energy แต่ทำให้หิวขึ้นเล็กน้อย</li>
+ * <li>ค่าความอิ่มลดช้ากว่าปกติ เพราะแมวกินน้อย</li>
+ * <li>เล่นแล้วได้ EXP เพิ่มพิเศษ</li>
+ * <li>การกระทำพิเศษ: ม้วนตัวนอน ฟื้น HP และ Energy แต่ทำให้หิวขึ้นเล็กน้อย</li>
  * </ul>
  */
 public class Cat extends AbstractPet {
@@ -29,7 +29,7 @@ public class Cat extends AbstractPet {
         setHappiness(getHappiness() + 3);
         gainExperience(2);
 
-        System.out.println(getName() + " เหมียวกินอาหารอย่างสง่า ✨");
+        System.out.println(getName() + " eats food elegantly ✨");
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Cat extends AbstractPet {
         setHunger(getHunger() - 8);
         gainExperience(5 + CAT_PLAY_EXP_BONUS);
 
-        System.out.println(getName() + " เล่นลูกบอลอย่างสนุกสนาน! +EXP:" + (5 + CAT_PLAY_EXP_BONUS));
+        System.out.println(getName() + " plays with the ball happily! +EXP:" + (5 + CAT_PLAY_EXP_BONUS));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class Cat extends AbstractPet {
         setHunger(getHunger() - 5);
         gainExperience(3);
 
-        System.out.println(getName() + " ม้วนตัวนอนหลับอย่างน่ารัก 😴 +HP:5 +Energy:8");
+        System.out.println(getName() + " curls up and sleeps cutely 😴 +HP:5 +Energy:8");
     }
 
     @Override
@@ -78,6 +78,6 @@ public class Cat extends AbstractPet {
 
     @Override
     public String getSpecialSkill() {
-        return "Cat Nap: แมวม้วนตัวนอนเพื่อฟื้น HP และ Energy";
+        return "Cat Nap: Curl up and sleep to restore HP and Energy";
     }
 }

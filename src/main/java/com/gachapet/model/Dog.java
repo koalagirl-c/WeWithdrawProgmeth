@@ -6,9 +6,9 @@ package com.gachapet.model;
  *
  * <p>คุณสมบัติพิเศษของสุนัข:</p>
  * <ul>
- *   <li>ค่าความอิ่มลดเร็วกว่าปกติ เพราะสุนัขกินจุ</li>
- *   <li>เล่นแล้วได้ HP Bonus เพิ่ม เพราะชอบออกกำลังกาย</li>
- *   <li>การกระทำพิเศษ: โชว์ลูกเล่น ได้ EXP มาก แต่ใช้พลังงานเยอะ</li>
+ * <li>ค่าความอิ่มลดเร็วกว่าปกติ เพราะสุนัขกินจุ</li>
+ * <li>เล่นแล้วได้ HP Bonus เพิ่ม เพราะชอบออกกำลังกาย</li>
+ * <li>การกระทำพิเศษ: โชว์ลูกเล่น ได้ EXP มาก แต่ใช้พลังงานเยอะ</li>
  * </ul>
  */
 public class Dog extends AbstractPet {
@@ -30,7 +30,7 @@ public class Dog extends AbstractPet {
         setHappiness(getHappiness() + 3);
         gainExperience(2);
 
-        System.out.println(getName() + " วูฟ! กินอาหารจนหมดชาม! 🍖");
+        System.out.println(getName() + " Woof! Eats everything in the bowl! 🍖");
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Dog extends AbstractPet {
         setHp(getHp() + DOG_PLAY_HP_BONUS);
         gainExperience(5);
 
-        System.out.println(getName() + " วิ่งเล่นสนุกสุดๆ! +HP:" + DOG_PLAY_HP_BONUS);
+        System.out.println(getName() + " runs around happily! +HP:" + DOG_PLAY_HP_BONUS);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class Dog extends AbstractPet {
         setEnergy(getEnergy() - 15);
         setHunger(getHunger() - 20);
 
-        System.out.println(getName() + " นั่ง! ยืน! ตีลังกา! +EXP:" + DOG_TRICK_EXP_REWARD + " 🐕");
+        System.out.println(getName() + " Sit! Stand! Backflip! +EXP:" + DOG_TRICK_EXP_REWARD + " 🐕");
     }
 
     @Override
@@ -80,6 +80,6 @@ public class Dog extends AbstractPet {
 
     @Override
     public String getSpecialSkill() {
-        return "Trick Show: สุนัขโชว์ลูกเล่นเพื่อเพิ่ม EXP จำนวนมาก";
+        return "Trick Show: Perform tricks to gain a large amount of EXP";
     }
 }

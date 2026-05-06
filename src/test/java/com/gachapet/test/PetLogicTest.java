@@ -1,273 +1,389 @@
 package com.gachapet.test;
 
-import com.gachapet.model.*;
-import org.junit.jupiter.api.*;
+import com.gachapet.model.AbstractPet;
+import com.gachapet.model.Cat;
+import com.gachapet.model.Dog;
+import com.gachapet.model.MythicPet;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * ชุดทดสอบ Logic หลักของสัตว์เลี้ยง
- * ทดสอบ: Boundary, Polymorphism, Encapsulation, และ OOP Behavior
+ * Unit tests for the main pet logic.
  *
- * <p>วิธีรัน: gradle test หรือคลิก Run ใน IntelliJ IDEA</p>
+ * <p>These tests cover:</p>
+ * <ul>
+ *   <li>Boundary behavior</li>
+ *   <li>Encapsulation through setters</li>
+ *   <li>Polymorphism across Cat, Dog, and MythicPet</li>
+ *   <li>Status decay behavior</li>
+ *   <li>Sleep and wake-up behavior</li>
+ *   <li>MythicPet-specific ultimate skill behavior</li>
+ * </ul>
  */
-@DisplayName("🐾 Pet Logic Tests")
+@DisplayName("Pet Logic Tests")
 class PetLogicTest {
-
-    // ==================== Test Fixtures ====================
 
     private Cat cat;
     private Dog dog;
     private MythicPet mythic;
 
-    /**
-     * สร้างสัตว์เลี้ยงใหม่ก่อนทุก Test (ป้องกัน State รั่วระหว่าง Test)
-     */
     @BeforeEach
     void setUp() {
-        cat    = new Cat("มิ้นต์");
-        dog    = new Dog("โชโก");
-        mythic = new MythicPet("เซลีน");
+        cat = new Cat("Mint");
+        dog = new Dog("Choco");
+        mythic = new MythicPet("Celeste");
     }
 
-    // ==================== Boundary Tests (HP & Hunger) ====================
+    // ==================== Boundary Tests ====================
 
-    /**
-     * เหตุผล: ทดสอบว่า HP ไม่สามารถติดลบได้
-     * Encapsulation: Setter ต้องบังคับ Boundary ให้ครบถ้วน
-     */
     @Test
-    @DisplayName("HP ต้องไม่ติดลบเมื่อรับดาเมจมากกว่า HP ที่มี")
+    @DisplayName("HP should not go below zero")
     void testHpCannotGoBelowZero() {
-        // Arrange: ตั้ง HP เป็น 10
         cat.setHp(10);
-
-        // Act: ลด HP ลงเยอะมาก
         cat.setHp(cat.getHp() - 9999);
 
-        // Assert: HP ต้องเป็น 0 ไม่ใช่ลบ
-        assertEquals(0, cat.getHp(), "HP ต้องไม่ต่ำกว่า 0");
+        assertEquals(0, cat.getHp(), "HP should be clamped to 0.");
     }
 
-    /**
-     * เหตุผล: ทดสอบว่า HP ไม่เกิน MAX_HP เมื่อฟื้น HP
-     * Encapsulation: Setter ต้อง clamp ค่าไว้ที่ MAX
-     */
     @Test
-    @DisplayName("HP ต้องไม่เกิน MAX_HP เมื่อได้รับการฟื้นฟู")
+    @DisplayName("HP should not exceed MAX_HP")
     void testHpCannotExceedMax() {
-        // Arrange: HP เต็มอยู่แล้ว
-        assertEquals(AbstractPet.MAX_HP, cat.getHp());
-
-        // Act: พยายามเพิ่ม HP เกิน MAX
+        cat.setHp(AbstractPet.MAX_HP);
         cat.setHp(cat.getHp() + 9999);
 
-        // Assert: HP ต้องไม่เกิน MAX_HP
-        assertEquals(AbstractPet.MAX_HP, cat.getHp(),
-            "HP ต้องไม่เกิน MAX_HP (" + AbstractPet.MAX_HP + ")");
+        assertEquals(AbstractPet.MAX_HP, cat.getHp(), "HP should be clamped to MAX_HP.");
     }
 
-    /**
-     * เหตุผล: ทดสอบว่า Hunger ไม่เกิน MAX_HUNGER แม้จะกินอาหารรัวๆ
-     * Boundary: ป้องกัน Overflow ของค่าสถานะ
-     */
     @Test
-    @DisplayName("Hunger ต้องไม่เกิน MAX_HUNGER เมื่อกินอาหารต่อเนื่อง")
+    @DisplayName("Hunger should not go below zero")
+    void testHungerCannotGoBelowZero() {
+        cat.setHunger(5);
+        cat.setHunger(cat.getHunger() - 9999);
+
+        assertEquals(0, cat.getHunger(), "Hunger should be clamped to 0.");
+    }
+
+    @Test
+    @DisplayName("Hunger should not exceed MAX_HUNGER")
     void testHungerCannotExceedMax() {
-        // Act: กินอาหารซ้ำๆ หลายรอบ
         for (int i = 0; i < 20; i++) {
             cat.eat(50);
         }
 
-        // Assert: Hunger ต้องหยุดที่ MAX_HUNGER เสมอ
-        assertEquals(AbstractPet.MAX_HUNGER, cat.getHunger(),
-            "Hunger ต้องไม่เกิน " + AbstractPet.MAX_HUNGER);
+        assertEquals(AbstractPet.MAX_HUNGER, cat.getHunger(), "Hunger should be clamped to MAX_HUNGER.");
     }
 
-    /**
-     * เหตุผล: ทดสอบว่า Hunger ไม่ติดลบ
-     */
     @Test
-    @DisplayName("Hunger ต้องไม่ติดลบ")
-    void testHungerCannotGoBelowZero() {
-        // Arrange: ตั้ง Hunger เป็น 5
-        cat.setHunger(5);
+    @DisplayName("Happiness should not go below zero")
+    void testHappinessCannotGoBelowZero() {
+        cat.setHappiness(-999);
 
-        // Act: ลด Hunger เยอะมาก
-        cat.setHunger(cat.getHunger() - 9999);
-
-        // Assert
-        assertEquals(0, cat.getHunger(), "Hunger ต้องไม่ต่ำกว่า 0");
+        assertEquals(0, cat.getHappiness(), "Happiness should be clamped to 0.");
     }
 
-    /**
-     * เหตุผล: ทดสอบว่าสัตว์เลี้ยงตรวจสอบ isAlive() ถูกต้อง
-     */
     @Test
-    @DisplayName("isAlive() คืน false เมื่อ HP เป็น 0")
+    @DisplayName("Happiness should not exceed MAX_HAPPINESS")
+    void testHappinessCannotExceedMax() {
+        cat.setHappiness(999);
+
+        assertEquals(AbstractPet.MAX_HAPPINESS, cat.getHappiness(), "Happiness should be clamped to MAX_HAPPINESS.");
+    }
+
+    @Test
+    @DisplayName("Energy should not go below zero")
+    void testEnergyCannotGoBelowZero() {
+        cat.setEnergy(-999);
+
+        assertEquals(0, cat.getEnergy(), "Energy should be clamped to 0.");
+    }
+
+    @Test
+    @DisplayName("Energy should not exceed MAX_ENERGY")
+    void testEnergyCannotExceedMax() {
+        cat.setEnergy(999);
+
+        assertEquals(AbstractPet.MAX_ENERGY, cat.getEnergy(), "Energy should be clamped to MAX_ENERGY.");
+    }
+
+    // ==================== Life State Tests ====================
+
+    @Test
+    @DisplayName("A pet should be dead when HP is zero")
     void testIsAliveWhenHpIsZero() {
-        // Arrange
         cat.setHp(0);
 
-        // Assert
-        assertFalse(cat.isAlive(), "สัตว์เลี้ยงที่ HP = 0 ต้องไม่มีชีวิต");
+        assertFalse(cat.isAlive(), "A pet with 0 HP should not be alive.");
     }
 
-    /**
-     * เหตุผล: สัตว์เลี้ยงที่เพิ่งสร้างต้องมีชีวิต
-     */
     @Test
-    @DisplayName("สัตว์เลี้ยงใหม่ต้องมีชีวิต (HP > 0)")
+    @DisplayName("New pets should be alive")
     void testNewPetIsAlive() {
         assertTrue(cat.isAlive());
         assertTrue(dog.isAlive());
         assertTrue(mythic.isAlive());
     }
 
+    @Test
+    @DisplayName("New pets should have full initial stats")
+    void testInitialValues() {
+        assertEquals(AbstractPet.MAX_HP, cat.getHp());
+        assertEquals(AbstractPet.MAX_HUNGER, cat.getHunger());
+        assertEquals(AbstractPet.MAX_HAPPINESS, cat.getHappiness());
+        assertEquals(AbstractPet.MAX_ENERGY, cat.getEnergy());
+        assertEquals(1, cat.getLevel());
+        assertEquals(0, cat.getExperience());
+    }
+
+    // ==================== Constructor Tests ====================
+
+    @Test
+    @DisplayName("Constructor should reject empty or null names")
+    void testConstructorThrowsOnInvalidName() {
+        assertThrows(IllegalArgumentException.class, () -> new Cat(""));
+        assertThrows(IllegalArgumentException.class, () -> new Cat("   "));
+        assertThrows(IllegalArgumentException.class, () -> new Dog(null));
+    }
+
     // ==================== Polymorphism Tests ====================
 
-    /**
-     * เหตุผล: ทดสอบ Polymorphism — เมธอด makeSound() ของแต่ละคลาสต้องคืนค่าต่างกัน
-     * OOP Concept: Runtime Polymorphism ผ่าน Abstract Method
-     */
     @Test
-    @DisplayName("makeSound() ต้องคืนค่าต่างกันตาม Subclass (Polymorphism)")
+    @DisplayName("makeSound() should return different sounds for each subclass")
     void testPolymorphismMakeSound() {
-        // Arrange: สร้าง List รวมสัตว์เลี้ยงแบบ Polymorphism
-        AbstractPet[] pets = { cat, dog, mythic };
-        String[] sounds = new String[3];
+        AbstractPet[] pets = {cat, dog, mythic};
 
-        // Act: เรียก makeSound() ผ่าน Reference แบบ AbstractPet
-        for (int i = 0; i < pets.length; i++) {
-            sounds[i] = pets[i].makeSound();
-        }
+        String catSound = pets[0].makeSound();
+        String dogSound = pets[1].makeSound();
+        String mythicSound = pets[2].makeSound();
 
-        // Assert: เสียงต้องไม่เหมือนกัน
-        assertNotEquals(sounds[0], sounds[1], "แมวและสุนัขต้องมีเสียงต่างกัน");
-        assertNotEquals(sounds[1], sounds[2], "สุนัขและ MythicPet ต้องมีเสียงต่างกัน");
-        assertNotEquals(sounds[0], sounds[2], "แมวและ MythicPet ต้องมีเสียงต่างกัน");
+        assertNotEquals(catSound, dogSound);
+        assertNotEquals(dogSound, mythicSound);
+        assertNotEquals(catSound, mythicSound);
     }
 
-    /**
-     * เหตุผล: ทดสอบว่า Dog play() ได้ HP Bonus แต่ Cat ไม่ได้
-     * Polymorphism: เมธอดชื่อเดียวกันแต่ผลลัพธ์ต่างกัน
-     */
     @Test
-    @DisplayName("Dog play() ต้องได้ HP Bonus แต่ Cat play() ไม่ได้ (Polymorphism)")
-    void testPolymorphismPlayDifference() {
-        // Arrange
-        cat.setHp(50);
-        dog.setHp(50);
-        int catHpBefore = cat.getHp();
-        int dogHpBefore = dog.getHp();
-
-        // Act
-        cat.play();
-        dog.play();
-
-        // Assert: Dog ต้องได้ HP เพิ่ม, Cat ต้องไม่ได้ HP เพิ่มจาก play()
-        assertTrue(dog.getHp() > dogHpBefore, "Dog play() ต้องได้ HP bonus");
-        assertEquals(catHpBefore, cat.getHp(), "Cat play() ต้องไม่เปลี่ยน HP");
-    }
-
-    /**
-     * เหตุผล: ทดสอบว่า getPetType() คืนค่าที่ถูกต้องตาม Subclass
-     * ใช้ทดสอบ instanceof / type checking ผ่าน Abstract Method
-     */
-    @Test
-    @DisplayName("getPetType() ต้องคืนชนิดที่ถูกต้องของแต่ละ Subclass")
+    @DisplayName("getPetType() should return the correct type for each subclass")
     void testGetPetType() {
-        assertEquals("CAT",    cat.getPetType());
-        assertEquals("DOG",    dog.getPetType());
+        assertEquals("CAT", cat.getPetType());
+        assertEquals("DOG", dog.getPetType());
         assertEquals("MYTHIC", mythic.getPetType());
     }
 
-    /**
-     * เหตุผล: ทดสอบว่า MythicPet กินอาหารแล้วได้ HP มากกว่า Cat และ Dog
-     * เพราะ MythicPet Override eat() โดยให้ HP ต่อหน่วยมากกว่า
-     */
     @Test
-    @DisplayName("MythicPet eat() ต้องได้ HP มากกว่า Dog (Polymorphism)")
+    @DisplayName("getEmoji() should return a non-empty value for each pet")
+    void testGetEmoji() {
+        assertFalse(cat.getEmoji().isEmpty());
+        assertFalse(dog.getEmoji().isEmpty());
+        assertFalse(mythic.getEmoji().isEmpty());
+    }
+
+    @Test
+    @DisplayName("getSpecialSkill() should return a non-empty value for each pet")
+    void testGetSpecialSkill() {
+        assertFalse(cat.getSpecialSkill().isEmpty());
+        assertFalse(dog.getSpecialSkill().isEmpty());
+        assertFalse(mythic.getSpecialSkill().isEmpty());
+    }
+
+    @Test
+    @DisplayName("Dog play() should increase HP, while Cat play() should not")
+    void testPolymorphismPlayDifference() {
+        cat.setHp(50);
+        dog.setHp(50);
+
+        int catHpBefore = cat.getHp();
+        int dogHpBefore = dog.getHp();
+
+        cat.play();
+        dog.play();
+
+        assertEquals(catHpBefore, cat.getHp(), "Cat play() should not change HP.");
+        assertTrue(dog.getHp() > dogHpBefore, "Dog play() should increase HP.");
+    }
+
+    @Test
+    @DisplayName("MythicPet eat() should restore at least as much HP as Dog")
     void testMythicEatBetterThanDog() {
-        // Arrange: ทุกตัวเริ่มจาก HP เดิม
         int startHp = 50;
+
         mythic.setHp(startHp);
         dog.setHp(startHp);
 
-        // Act: กินอาหารด้วย amount เท่ากัน
         mythic.eat(40);
         dog.eat(40);
 
-        // Assert: MythicPet ต้องได้ HP มากกว่าหรือเท่ากับ Dog
-        assertTrue(mythic.getHp() >= dog.getHp(),
-            "MythicPet ต้องฟื้น HP ได้มากกว่าหรือเท่ากับ Dog");
+        assertTrue(
+                mythic.getHp() >= dog.getHp(),
+                "MythicPet should restore at least as much HP as Dog."
+        );
     }
 
-    // ==================== Hunger Decay Rate Tests ====================
+    // ==================== Action Behavior Tests ====================
 
-    /**
-     * เหตุผล: ทดสอบว่า Dog หิวเร็วกว่า Cat (อัตราลด Hunger ต่างกัน)
-     */
     @Test
-    @DisplayName("Dog ต้องหิวเร็วกว่า Cat (HungerDecayRate แตกต่างกัน)")
+    @DisplayName("Cat play() should increase happiness and reduce energy")
+    void testCatPlayChangesStats() {
+        cat.setHappiness(50);
+        cat.setEnergy(50);
+
+        cat.play();
+
+        assertTrue(cat.getHappiness() > 50, "Cat play() should increase happiness.");
+        assertTrue(cat.getEnergy() < 50, "Cat play() should reduce energy.");
+    }
+
+    @Test
+    @DisplayName("Dog play() should increase happiness and reduce energy")
+    void testDogPlayChangesStats() {
+        dog.setHappiness(50);
+        dog.setEnergy(50);
+
+        dog.play();
+
+        assertTrue(dog.getHappiness() > 50, "Dog play() should increase happiness.");
+        assertTrue(dog.getEnergy() < 50, "Dog play() should reduce energy.");
+    }
+
+    @Test
+    @DisplayName("performAction() should affect stats differently by subclass")
+    void testPerformActionPolymorphism() {
+        cat.setEnergy(50);
+        dog.setEnergy(50);
+        mythic.setHp(50);
+
+        cat.performAction();
+        dog.performAction();
+        mythic.performAction();
+
+        assertTrue(cat.getEnergy() > 50, "Cat special action should increase energy.");
+        assertTrue(dog.getEnergy() < 50, "Dog special action should decrease energy.");
+        assertEquals(AbstractPet.MAX_HP, mythic.getHp(), "Mythic special action should heal HP to full.");
+    }
+
+    // ==================== Status Decay Tests ====================
+
+    @Test
+    @DisplayName("Dog should lose hunger faster than Cat")
     void testHungerDecayRateDifference() {
-        // Arrange: ตั้ง Hunger เท่ากัน
         cat.setHunger(100);
         dog.setHunger(100);
 
-        // Act: อัปเดตสถานะ 5 รอบ
         for (int i = 0; i < 5; i++) {
             cat.updateStatus();
             dog.updateStatus();
         }
 
-        // Assert: Dog ต้องหิวกว่า (Hunger ต่ำกว่า)
-        assertTrue(dog.getHunger() < cat.getHunger(),
-            "Dog ต้องมี Hunger น้อยกว่า Cat หลัง updateStatus() หลายครั้ง");
+        assertTrue(
+                dog.getHunger() < cat.getHunger(),
+                "Dog should have lower Hunger than Cat after repeated status updates."
+        );
     }
 
-    // ==================== Constructor & IllegalArgument Tests ====================
-
-    /**
-     * เหตุผล: ทดสอบว่า Constructor โยน Exception เมื่อชื่อว่างเปล่า
-     * Encapsulation: ป้องกันข้อมูลที่ไม่ถูกต้องตั้งแต่แรก
-     */
     @Test
-    @DisplayName("สร้างสัตว์เลี้ยงด้วยชื่อว่างต้องโยน IllegalArgumentException")
-    void testConstructorThrowsOnEmptyName() {
-        assertThrows(IllegalArgumentException.class, () -> new Cat(""),
-            "ชื่อว่างต้องโยน IllegalArgumentException");
-        assertThrows(IllegalArgumentException.class, () -> new Dog(null),
-            "ชื่อ null ต้องโยน IllegalArgumentException");
+    @DisplayName("tick() should update pet age and reduce stats")
+    void testTickUpdatesAgeAndStats() {
+        int ageBefore = cat.getAge();
+        int hungerBefore = cat.getHunger();
+
+        cat.tick();
+
+        assertEquals(ageBefore + 1, cat.getAge(), "tick() should increase age by 1.");
+        assertTrue(cat.getHunger() < hungerBefore, "tick() should reduce Hunger.");
     }
 
-    /**
-     * เหตุผล: ทดสอบว่าสัตว์เลี้ยงใหม่เริ่มต้นด้วยค่าที่ถูกต้อง
-     */
     @Test
-    @DisplayName("สัตว์เลี้ยงใหม่ต้องมี HP และ Hunger เต็มหลอด")
-    void testInitialValues() {
-        assertEquals(AbstractPet.MAX_HP,     cat.getHp());
-        assertEquals(AbstractPet.MAX_HUNGER, cat.getHunger());
-        assertEquals(1,                       cat.getLevel());
+    @DisplayName("Low stats should reduce HP after updateStatus()")
+    void testLowStatsReduceHp() {
+        cat.setHp(50);
+        cat.setHunger(0);
+        cat.setHappiness(0);
+        cat.setEnergy(0);
+
+        cat.updateStatus();
+
+        assertTrue(cat.getHp() < 50, "Low stats should reduce HP.");
+    }
+
+    @Test
+    @DisplayName("Good stats should slowly restore HP after updateStatus()")
+    void testGoodStatsRestoreHp() {
+        cat.setHp(50);
+        cat.setHunger(100);
+        cat.setHappiness(100);
+        cat.setEnergy(100);
+
+        cat.updateStatus();
+
+        assertTrue(cat.getHp() > 50, "Good stats should restore HP slightly.");
+    }
+
+    // ==================== Sleep Tests ====================
+
+    @Test
+    @DisplayName("sleep() should set sleeping state to true")
+    void testSleepSetsSleepingTrue() {
+        cat.sleep();
+
+        assertTrue(cat.isSleeping(), "sleep() should set sleeping to true.");
+    }
+
+    @Test
+    @DisplayName("wakeUp() should set sleeping state to false")
+    void testWakeUpSetsSleepingFalse() {
+        cat.sleep();
+        cat.wakeUp();
+
+        assertFalse(cat.isSleeping(), "wakeUp() should set sleeping to false.");
+    }
+
+    @Test
+    @DisplayName("Sleeping pet should gain energy during updateStatus()")
+    void testSleepingPetGainsEnergy() {
+        cat.setEnergy(20);
+        cat.sleep();
+
+        cat.updateStatus();
+
+        assertTrue(cat.getEnergy() > 20, "Sleeping pet should gain energy.");
+    }
+
+    @Test
+    @DisplayName("Sleeping pet should not perform normal actions")
+    void testSleepingPetCannotPerformNormalActions() {
+        cat.sleep();
+
+        int hungerBefore = cat.getHunger();
+        int happinessBefore = cat.getHappiness();
+
+        cat.eat(20);
+        cat.play();
+
+        assertEquals(hungerBefore, cat.getHunger(), "Sleeping pet should not eat.");
+        assertEquals(happinessBefore, cat.getHappiness(), "Sleeping pet should not play.");
     }
 
     // ==================== MythicPet Specific Tests ====================
 
-    /**
-     * เหตุผล: ทดสอบ Ultimate Skill ของ MythicPet
-     */
     @Test
-    @DisplayName("MythicPet performAction() ต้องฟื้น HP เต็มหลอด")
+    @DisplayName("MythicPet ultimate should heal HP to full")
     void testMythicUltimateHealsToFull() {
-        // Arrange
         mythic.setHp(10);
         int chargesBefore = mythic.getUltimateCharges();
 
-        // Act
         mythic.performAction();
 
-        // Assert
-        assertEquals(AbstractPet.MAX_HP, mythic.getHp(), "Ultimate ต้องฟื้น HP เต็ม");
-        assertEquals(chargesBefore - 1, mythic.getUltimateCharges(), "ต้องใช้ Charge 1 ครั้ง");
+        assertEquals(AbstractPet.MAX_HP, mythic.getHp(), "Ultimate should heal HP to full.");
+        assertEquals(chargesBefore - 1, mythic.getUltimateCharges(), "Ultimate should consume one charge.");
+    }
+
+    @Test
+    @DisplayName("addUltimateCharges() should not exceed the maximum charge limit")
+    void testMythicUltimateChargesDoNotExceedMax() {
+        mythic.addUltimateCharges(999);
+
+        assertTrue(mythic.getUltimateCharges() <= 3, "Ultimate charges should not exceed the maximum limit.");
     }
 }

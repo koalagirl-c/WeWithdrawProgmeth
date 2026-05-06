@@ -167,4 +167,11 @@ public class GachaSystem {
                 CAT_RATE * 100, DOG_RATE * 100, MYTHIC_RATE * 100, GACHA_COST
         );
     }
+    public boolean canRoll(int coins) {
+        return coins >= GACHA_COST;
+    }
+
+    public boolean canRollTen(int coins) {
+        return coins >= GACHA_COST * 10;
+    }
 }

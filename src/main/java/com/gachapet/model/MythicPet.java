@@ -7,10 +7,10 @@ package com.gachapet.model;
  *
  * <p>คุณสมบัติพิเศษของสัตว์ในตำนาน:</p>
  * <ul>
- *   <li>ค่าความอิ่มลดช้ามาก เพราะอึดทน</li>
- *   <li>ฟื้น HP ของตัวเองได้</li>
- *   <li>ได้รับ EXP เพิ่มสองเท่าจากกิจกรรมหลัก</li>
- *   <li>การกระทำพิเศษ: ใช้พลังเวทมนตร์ฟื้นฟู HP เต็ม</li>
+ * <li>ค่าความอิ่มลดช้ามาก เพราะอึดทน</li>
+ * <li>ฟื้น HP ของตัวเองได้</li>
+ * <li>ได้รับ EXP เพิ่มสองเท่าจากกิจกรรมหลัก</li>
+ * <li>การกระทำพิเศษ: ใช้พลังเวทมนตร์ฟื้นฟู HP เต็ม</li>
  * </ul>
  */
 public class MythicPet extends AbstractPet {
@@ -51,7 +51,7 @@ public class MythicPet extends AbstractPet {
         setHappiness(getHappiness() + 5);
         gainExperience((int) (2 * MYTHIC_EXP_MULTIPLIER));
 
-        System.out.println(getName() + " รับพลังงานจากอาหารเวทมนตร์ ✨🌟");
+        System.out.println(getName() + " absorbs energy from magical food ✨🌟");
     }
 
     /**
@@ -66,7 +66,7 @@ public class MythicPet extends AbstractPet {
         setHunger(getHunger() - 3);
         gainExperience((int) (5 * MYTHIC_EXP_MULTIPLIER));
 
-        System.out.println(getName() + " เล่นอย่างลึกลับและน่าพิศวง! +EXP:" + (int) (5 * MYTHIC_EXP_MULTIPLIER));
+        System.out.println(getName() + " plays mysteriously! +EXP:" + (int) (5 * MYTHIC_EXP_MULTIPLIER));
     }
 
     /**
@@ -113,12 +113,12 @@ public class MythicPet extends AbstractPet {
             setEnergy(getEnergy() + 10);
             ultimateCharges--;
 
-            System.out.println(getName() + " ใช้พลังเวทมนตร์ฟื้นฟู HP เต็มหลอด! 🌟 เหลือ " + ultimateCharges + " ครั้ง");
+            System.out.println(getName() + " uses magic to fully restore HP! 🌟 Remaining: " + ultimateCharges + " charges");
         } else {
             gainExperience(5);
             setHappiness(getHappiness() + 5);
 
-            System.out.println(getName() + " ไม่มีพลังงานเวทเหลือแล้ว... ทำสมาธิแทน +EXP:5");
+            System.out.println(getName() + " has no magic power left... Meditating instead +EXP:5");
         }
     }
 
@@ -129,7 +129,7 @@ public class MythicPet extends AbstractPet {
      */
     @Override
     public String makeSound() {
-        return "✨ *เสียงเวทมนตร์* KYAAAA~~ 🌟";
+        return "✨ *Magical Sounds* KYAAAA~~ 🌟";
     }
 
     /**
@@ -179,7 +179,7 @@ public class MythicPet extends AbstractPet {
      */
     @Override
     public String getSpecialSkill() {
-        return "Ultimate Heal: ใช้พลังเวทฟื้น HP เต็ม และเพิ่ม Happiness/Energy";
+        return "Ultimate Heal: Use magic power to fully restore HP and increase Happiness/Energy";
     }
 
     /**

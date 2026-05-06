@@ -18,9 +18,9 @@ public abstract class AbstractPet implements Actionable, Serializable {
 
     private String name;
     private int hp;
-    private int hunger;      // 100 = อิ่มมาก, 0 = หิวมาก
-    private int happiness;   // 100 = มีความสุขมาก
-    private int energy;      // 100 = พลังงานเต็ม
+    private int hunger;      // 100 = full, 0 = starving
+    private int happiness;   // 100 = very happy
+    private int energy;      // 100 = full energy
     private int level;
     private int experience;
     private int age;
@@ -84,7 +84,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
 
     public void setName(String name) {
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("ชื่อสัตว์เลี้ยงต้องไม่ว่างเปล่า");
+            throw new IllegalArgumentException("Pet name cannot be empty");
         }
         this.name = name.trim();
     }
@@ -136,7 +136,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
         setHappiness(this.happiness + 2);
         gainExperience(2);
 
-        System.out.println(name + " กินอาหาร +Hunger:" + amount);
+        System.out.println(name + " eats food. +Hunger:" + amount);
     }
 
     @Override
@@ -148,7 +148,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
         setHunger(this.hunger - 10);
         gainExperience(5);
 
-        System.out.println(name + " เล่นสนุก! +Happiness:15 -Energy:10 -Hunger:10");
+        System.out.println(name + " plays happily! +Happiness:15 -Energy:10 -Hunger:10");
     }
 
     @Override
@@ -156,7 +156,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
         if (!isAlive()) return;
 
         this.sleeping = true;
-        System.out.println(name + " กำลังนอนหลับ...");
+        System.out.println(name + " is falling asleep...");
     }
 
     @Override
@@ -164,7 +164,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
         if (!isAlive()) return;
 
         this.sleeping = false;
-        System.out.println(name + " ตื่นแล้ว!");
+        System.out.println(name + " woke up!");
     }
 
     public void gainExperience(int amount) {
@@ -181,7 +181,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
             setHp(this.hp + 10);
             setHappiness(this.happiness + 5);
 
-            System.out.println("🎉 " + name + " Level Up! ตอนนี้ Level " + this.level);
+            System.out.println("🎉 " + name + " Level Up! Reached Level " + this.level);
 
             expNeeded = level * 100;
         }
@@ -209,7 +209,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
 
             if (this.energy >= MAX_ENERGY) {
                 sleeping = false;
-                System.out.println(name + " นอนเต็มอิ่มแล้ว!");
+                System.out.println(name + " is fully rested!");
             }
         } else {
             setHunger(this.hunger - getHungerDecayRate());
@@ -251,7 +251,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
         if (hp <= 0) {
             hp = 0;
             sleeping = false;
-            System.out.println("💀 " + name + " หมดแรงแล้ว... Game Over");
+            System.out.println("💀 " + name + " fainted... Game Over");
         }
     }
 
@@ -261,26 +261,26 @@ public abstract class AbstractPet implements Actionable, Serializable {
         }
 
         if (sleeping) {
-            return "กำลังนอนหลับ";
+            return "Sleeping";
         }
 
         if (hp <= 30) {
-            return "สุขภาพแย่ ต้องดูแลด่วน";
+            return "Poor health, needs immediate care";
         }
 
         if (hunger <= 30) {
-            return "หิวแล้ว";
+            return "Hungry";
         }
 
         if (happiness <= 30) {
-            return "เหงา อยากเล่นด้วย";
+            return "Lonely, wants to play";
         }
 
         if (energy <= 30) {
-            return "เหนื่อย อยากพัก";
+            return "Tired, wants to rest";
         }
 
-        return "สบายดี";
+        return "Healthy";
     }
 
     // ==================== Decay Rate Methods ====================
