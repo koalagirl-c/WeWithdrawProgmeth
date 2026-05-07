@@ -127,7 +127,9 @@ public class GachaSystem {
      */
     private Cat createCat() {
         String name = CAT_NAMES[random.nextInt(CAT_NAMES.length)];
-        return new Cat(name);
+        Cat cat = new Cat(name);
+        cat.setImageVariant(random.nextInt(3));
+        return cat;
     }
 
     /**
@@ -137,7 +139,9 @@ public class GachaSystem {
      */
     private Dog createDog() {
         String name = DOG_NAMES[random.nextInt(DOG_NAMES.length)];
-        return new Dog(name);
+        Dog dog = new Dog(name);
+        dog.setImageVariant(random.nextInt(3));
+        return dog;
     }
 
     /**

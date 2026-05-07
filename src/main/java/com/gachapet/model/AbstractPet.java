@@ -31,6 +31,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
     private int experience;
     private int age;
     private int inactiveAge;
+    private int imageVariant;
     private boolean sleeping;
 
     public AbstractPet(String name) {
@@ -43,6 +44,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
         this.experience = 0;
         this.age = 0;
         this.inactiveAge = 0;
+        this.imageVariant = 0;
         this.sleeping = false;
     }
 
@@ -88,6 +90,10 @@ public abstract class AbstractPet implements Actionable, Serializable {
         return hp > 0;
     }
 
+    public int getImageVariant() {
+        return imageVariant;
+    }
+
     // ==================== Setters ====================
 
     public void setName(String name) {
@@ -121,6 +127,10 @@ public abstract class AbstractPet implements Actionable, Serializable {
 
     public void setLevel(int level) {
         this.level = clamp(level, 1, MAX_LEVEL);
+    }
+
+    public void setImageVariant(int imageVariant) {
+        this.imageVariant = Math.max(0, imageVariant);
     }
 
     public void setSleeping(boolean sleeping) {
@@ -409,7 +419,7 @@ public abstract class AbstractPet implements Actionable, Serializable {
 
     public String toCsvString() {
         return String.format(
-                "%s,%s,%d,%d,%d,%d,%d,%d,%b",
+                "%s,%s,%d,%d,%d,%d,%d,%d,%b,%d",
                 getPetType(),
                 name,
                 hp,
@@ -418,7 +428,8 @@ public abstract class AbstractPet implements Actionable, Serializable {
                 energy,
                 level,
                 experience,
-                sleeping
+                sleeping,
+                imageVariant
         );
     }
 }

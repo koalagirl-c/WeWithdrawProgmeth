@@ -14,6 +14,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -29,6 +32,13 @@ public class KawaiiPetApp extends Application {
     private ListView<String> petListView;
     private ObservableList<String> petObservableList = FXCollections.observableArrayList();
     private ImageView petImageView;
+    private Image[] dogImages = new Image[3];
+    private Image[] catImages = new Image[3];
+    private Image mythicImage;
+    private AudioClip dogBarkSound;
+    private AudioClip catMeowSound;
+    private AudioClip mythicHorseSound;
+    private MediaPlayer bgmPlayer;
 
     // Styles
     private final String ROOT_STYLE = "-fx-background-color: #fdf4ff; -fx-font-family: 'Segoe UI', sans-serif;";
@@ -39,6 +49,9 @@ public class KawaiiPetApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        loadAssets();
+        playBackgroundMusic();
+
         currentInventory = dataHandler.loadData();
         if (currentInventory == null) {
             currentInventory = new UserInventory("Player");
@@ -77,7 +90,12 @@ public class KawaiiPetApp extends Application {
 
         primaryStage.setTitle("🐾 Kawaii Gacha Pet Sanctuary");
         primaryStage.setScene(scene);
-        primaryStage.setOnCloseRequest(e -> dataHandler.saveData(currentInventory)); // เซฟตอนปิด[cite: 16]
+        primaryStage.setOnCloseRequest(e -> {
+            if (bgmPlayer != null) {
+                bgmPlayer.stop();
+            }
+            dataHandler.saveData(currentInventory);
+        }); // เซฟตอนปิด[cite: 16]
         primaryStage.show();
     }
 
@@ -135,7 +153,9 @@ public class KawaiiPetApp extends Application {
         // Header
         HBox header = new HBox(15);
         petImageView = new ImageView();
-        petImageView.setFitWidth(80); petImageView.setFitHeight(80);
+        petImageView.setFitWidth(110); petImageView.setFitHeight(110);
+        petImageView.setPreserveRatio(true);
+        petImageView.setSmooth(true);
         VBox nameInfo = new VBox(5);
         petNameLabel = new Label("Select a Pet");
         petNameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
@@ -203,9 +223,80 @@ public class KawaiiPetApp extends Application {
                 break;
             case "skill":
                 selectedPet.performAction(); statusMsg.setText("Used Skill: " + selectedPet.makeSound());
+                playPetSound(selectedPet);
                 break;
         }
         updateUI();
+    }
+
+    private void loadAssets() {
+        var dogImageResource = getClass().getResource("/assets/images/dog.png");
+        if (dogImageResource != null) {
+            dogImages[0] = new Image(dogImageResource.toExternalForm());
+        }
+
+        for (int i = 1; i < dogImages.length; i++) {
+            var dogVariantResource = getClass().getResource("/assets/images/dog-" + (i + 1) + ".png");
+            if (dogVariantResource != null) {
+                dogImages[i] = new Image(dogVariantResource.toExternalForm());
+            }
+        }
+
+        var dogSoundResource = getClass().getResource("/assets/sounds/dog-bark.mp3");
+        if (dogSoundResource != null) {
+            dogBarkSound = new AudioClip(dogSoundResource.toExternalForm());
+            dogBarkSound.setVolume(0.75);
+        }
+
+        for (int i = 0; i < catImages.length; i++) {
+            var catImageResource = getClass().getResource("/assets/images/cat-" + (i + 1) + ".png");
+            if (catImageResource != null) {
+                catImages[i] = new Image(catImageResource.toExternalForm());
+            }
+        }
+
+        var catSoundResource = getClass().getResource("/assets/sounds/cat-meow.mp3");
+        if (catSoundResource != null) {
+            catMeowSound = new AudioClip(catSoundResource.toExternalForm());
+            catMeowSound.setVolume(0.75);
+        }
+
+        var mythicImageResource = getClass().getResource("/assets/images/mythic.png");
+        if (mythicImageResource != null) {
+            mythicImage = new Image(mythicImageResource.toExternalForm());
+        }
+
+        var mythicSoundResource = getClass().getResource("/assets/sounds/mythic-horse.mp3");
+        if (mythicSoundResource != null) {
+            mythicHorseSound = new AudioClip(mythicSoundResource.toExternalForm());
+            mythicHorseSound.setVolume(0.75);
+        }
+
+        var bgmResource = getClass().getResource("/assets/music/bgm-love.mp3");
+        if (bgmResource != null) {
+            bgmPlayer = new MediaPlayer(new Media(bgmResource.toExternalForm()));
+            bgmPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            bgmPlayer.setVolume(0.18);
+        }
+    }
+
+    private void playBackgroundMusic() {
+        if (bgmPlayer != null) {
+            bgmPlayer.play();
+        }
+    }
+
+    private void playPetSound(AbstractPet pet) {
+        if (pet != null && "DOG".equals(pet.getPetType()) && dogBarkSound != null) {
+            dogBarkSound.stop();
+            dogBarkSound.play();
+        } else if (pet != null && "CAT".equals(pet.getPetType()) && catMeowSound != null) {
+            catMeowSound.stop();
+            catMeowSound.play();
+        } else if (pet != null && "MYTHIC".equals(pet.getPetType()) && mythicHorseSound != null) {
+            mythicHorseSound.stop();
+            mythicHorseSound.play();
+        }
     }
 
     private void renameSelectedPet() {
@@ -241,6 +332,7 @@ public class KawaiiPetApp extends Application {
 
             petNameLabel.setText(selectedPet.getEmoji() + " " + selectedPet.getName() + " (Lv." + selectedPet.getLevel() + ")");
             petTypeLabel.setText("Type: " + selectedPet.getPetType() + " | Status: " + selectedPet.getStatusText());
+            petImageView.setImage(getPetImage(selectedPet));
 
             if (selectedPet.isSleeping()) statusMsg.setText(selectedPet.getName() + " is sleeping...");
         }
@@ -266,6 +358,28 @@ public class KawaiiPetApp extends Application {
         }
 
         return "";
+    }
+
+    private Image getPetImage(AbstractPet pet) {
+        if (pet == null) {
+            return null;
+        }
+
+        if ("DOG".equals(pet.getPetType())) {
+            int imageIndex = pet.getImageVariant() % dogImages.length;
+            return dogImages[imageIndex];
+        }
+
+        if ("CAT".equals(pet.getPetType())) {
+            int imageIndex = pet.getImageVariant() % catImages.length;
+            return catImages[imageIndex];
+        }
+
+        if ("MYTHIC".equals(pet.getPetType())) {
+            return mythicImage;
+        }
+
+        return null;
     }
 
     private void openGachaWindow() {

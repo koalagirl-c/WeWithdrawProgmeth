@@ -222,6 +222,11 @@ public class FileDataHandler {
                 pet.setLevel(level);
                 pet.setSleeping(sleeping);
 
+                if (parts.length >= 10) {
+                    int imageVariant = Integer.parseInt(parts[9].trim());
+                    pet.setImageVariant(imageVariant);
+                }
+
             } else {
                 int level = Integer.parseInt(parts[4].trim());
                 pet.setLevel(level);
