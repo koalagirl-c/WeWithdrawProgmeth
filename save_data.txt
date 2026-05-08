@@ -1,0 +1,12 @@
+PLAYER_NAME:Player
+COINS:10
+PET:CAT,MoMo,100,63,100,31,1,0,false,0
+PET:CAT,Bella,100,95,95,97,1,0,false,1
+PET:CAT,Luca,100,98,98,100,1,0,false,0
+PET:CAT,Nala,100,98,98,100,1,0,false,2
+PET:DOG,Max,100,91,100,93,1,0,false,1
+PET:CAT,Pumpkin,100,99,99,90,1,0,false,2
+PET:CAT,Luna,100,36,100,20,1,64,false,1
+PET:CAT,Luca,100,100,100,100,1,0,false,0
+PET:CAT,Pumpkin,100,100,100,100,1,0,false,0
+PET:DOG,Choco,100,100,100,100,1,0,false,0

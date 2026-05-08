@@ -1,0 +1,247 @@
+@startuml
+abstract class com.gachapet.model.AbstractPet {
+- {static} long serialVersionUID
++ {static} int MAX_HP
++ {static} int MAX_HUNGER
++ {static} int MAX_HAPPINESS
++ {static} int MAX_ENERGY
++ {static} int MAX_LEVEL
+- {static} int ACTIVE_DECAY_INTERVAL_SECONDS
+- {static} int INACTIVE_DECAY_INTERVAL_SECONDS
+- {static} int SLEEP_ENERGY_INTERVAL_SECONDS
+- {static} int SLEEP_HUNGER_INTERVAL_SECONDS
+- {static} String ENGLISH_NAME_PATTERN
+- String name
+- int hp
+- int hunger
+- int happiness
+- int energy
+- int level
+- int experience
+- int age
+- int inactiveAge
+- int imageVariant
+- boolean sleeping
++ <<Create>> AbstractPet(String)
++ String getName()
++ int getHp()
++ int getHunger()
++ int getHappiness()
++ int getEnergy()
++ int getLevel()
++ int getExperience()
++ int getAge()
++ boolean isSleeping()
++ boolean isAlive()
++ int getImageVariant()
++ void setName(String)
++ void setHp(int)
++ void setHunger(int)
++ void setHappiness(int)
++ void setEnergy(int)
++ void setLevel(int)
++ void setImageVariant(int)
++ void setSleeping(boolean)
+- int clamp(int,int,int)
+# boolean canDoAction()
++ void eat(int)
++ void play()
++ void sleep()
++ void wakeUp()
++ void gainExperience(int)
++ void updateStatus()
++ void tick()
++ void tickInactive()
++ boolean needsCareAlert()
++ String getCareAlertText()
+- void updateHpByCondition()
++ String getStatusText()
+# int getHungerDecayRate()
+# int getHappinessDecayRate()
+# int getEnergyDecayRate()
++ {abstract}String getPetType()
++ {abstract}String getEmoji()
++ {abstract}String makeSound()
++ {abstract}void performAction()
++ {abstract}String getSpecialSkill()
++ String toString()
++ String toCsvString()
+}
+
+
+class com.gachapet.data.FileDataHandler {
+- {static} String DEFAULT_SAVE_FILE
+- {static} String PREFIX_PLAYER
+- {static} String PREFIX_COINS
+- {static} String PREFIX_PET
+- String filePath
++ <<Create>> FileDataHandler()
++ <<Create>> FileDataHandler(String)
++ boolean saveData(UserInventory)
++ UserInventory loadData()
++ boolean deleteSaveFile()
++ boolean hasSaveFile()
+- AbstractPet parsePetFromCsv(String)
+- AbstractPet createPetByType(String,String)
+- void setInventoryCoins(UserInventory,int)
++ String getFilePath()
+}
+
+
+class com.gachapet.data.UserInventory {
++ {static} int STARTING_COINS
++ {static} int MAX_PET_CAPACITY
+- ArrayList<AbstractPet> pets
+- int coins
+- String playerName
++ <<Create>> UserInventory(String)
++ boolean addPet(AbstractPet)
++ AbstractPet removePet(int)
++ AbstractPet getPet(int)
++ List<AbstractPet> getAllPets()
++ int getPetCount()
++ boolean isFull()
++ boolean isEmpty()
++ boolean isValidIndex(int)
++ int getCoins()
++ void setCoins(int)
++ void addCoins(int)
++ boolean spendCoins(int)
++ boolean hasEnoughCoins(int)
++ String getPlayerName()
++ void setPlayerName(String)
+~ ArrayList<AbstractPet> getPetsInternal()
++ String toString()
+}
+
+
+class com.gachapet.model.Cat {
+- {static} int CAT_PLAY_EXP_BONUS
+- {static} int CAT_HUNGER_DECAY
++ <<Create>> Cat(String)
++ void eat(int)
++ void play()
+# int getHungerDecayRate()
++ void performAction()
++ String makeSound()
++ String getPetType()
++ String getEmoji()
++ String getSpecialSkill()
+}
+
+
+class com.gachapet.model.Dog {
+- {static} int DOG_PLAY_HP_BONUS
+- {static} int DOG_HUNGER_DECAY
+- {static} int DOG_TRICK_EXP_REWARD
++ <<Create>> Dog(String)
++ void eat(int)
++ void play()
+# int getHungerDecayRate()
++ void performAction()
++ String makeSound()
++ String getPetType()
++ String getEmoji()
++ String getSpecialSkill()
+}
+
+
+class com.gachapet.model.GachaSystem {
++ {static} double CAT_RATE
++ {static} double DOG_RATE
++ {static} double MYTHIC_RATE
++ {static} int GACHA_COST
+- Random random
+- {static} String[] CAT_NAMES
+- {static} String[] DOG_NAMES
+- {static} String[] MYTHIC_NAMES
++ <<Create>> GachaSystem()
++ <<Create>> GachaSystem(long)
++ AbstractPet roll()
++ AbstractPet[] rollTen()
+- Cat createCat()
+- Dog createDog()
+- MythicPet createMythicPet()
++ String getDropRateInfo()
++ boolean canRoll(int)
++ boolean canRollTen(int)
+}
+
+
+class com.gachapet.model.MythicPet {
+- {static} double MYTHIC_EXP_MULTIPLIER
+- {static} int MYTHIC_HUNGER_DECAY
+- {static} int MAX_ULTIMATE_CHARGES
+- int ultimateCharges
++ <<Create>> MythicPet(String)
++ void eat(int)
++ void play()
+# int getHungerDecayRate()
+# int getHappinessDecayRate()
+# int getEnergyDecayRate()
++ void performAction()
++ String makeSound()
++ int getUltimateCharges()
++ void addUltimateCharges(int)
++ String getPetType()
++ String getEmoji()
++ String getSpecialSkill()
++ String toString()
+}
+
+
+class com.gachapet.KawaiiPetApp {
+- {static} UserInventory currentInventory
+- {static} FileDataHandler dataHandler
+- AbstractPet selectedPet
+- ProgressBar hpBar
+- Label hpLabel
+- ListView<String> petListView
+- ObservableList<String> petObservableList
+- ImageView petImageView
+- Image[] dogImages
+- Image[] catImages
+- Image mythicImage
+- AudioClip dogBarkSound
+- AudioClip catMeowSound
+- AudioClip mythicHorseSound
+- MediaPlayer bgmPlayer
+- String ROOT_STYLE
+- String PANEL_STYLE
+- String TITLE_STYLE
+- String GACHA_BTN_STYLE
+- String ACTION_BTN_STYLE
++ void start(Stage)
+- BorderPane buildMainView()
+- void handleAction(String)
+- void loadAssets()
+- void playBackgroundMusic()
+- void playPetSound(AbstractPet)
+- void renameSelectedPet()
+- void updateUI()
+- String getCareAlertText()
+- Image getPetImage(AbstractPet)
+- void openGachaWindow()
++ {static} void main(String[])
+}
+
+
+interface com.gachapet.model.Actionable {
+~ void eat(int)
+~ void play()
+~ void sleep()
+~ void wakeUp()
+~ String makeSound()
+~ void performAction()
+~ String getSpecialSkill()
+}
+
+
+
+com.gachapet.model.Actionable <|.. com.gachapet.model.AbstractPet
+java.io.Serializable <|.. com.gachapet.model.AbstractPet
+com.gachapet.model.AbstractPet <|-- com.gachapet.model.Cat
+com.gachapet.model.AbstractPet <|-- com.gachapet.model.Dog
+com.gachapet.model.AbstractPet <|-- com.gachapet.model.MythicPet
+javafx.application.Application <|-- com.gachapet.KawaiiPetApp
+@enduml
