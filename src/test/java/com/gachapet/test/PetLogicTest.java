@@ -12,16 +12,16 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the main pet logic.
+ * คลาสทดสอบ (Unit tests) สำหรับระบบตรรกะหลักของสัตว์เลี้ยง
  *
- * <p>These tests cover:</p>
+ * <p>การทดสอบนี้ครอบคลุมเรื่อง:</p>
  * <ul>
- *   <li>Boundary behavior</li>
- *   <li>Encapsulation through setters</li>
- *   <li>Polymorphism across Cat, Dog, and MythicPet</li>
- *   <li>Status decay behavior</li>
- *   <li>Sleep and wake-up behavior</li>
- *   <li>MythicPet-specific ultimate skill behavior</li>
+ * <li>พฤติกรรมเมื่อถึงขีดจำกัดของค่าต่างๆ (Boundary behavior) เช่น ค่าห้ามเกิน 100 หรือห้ามติดลบ</li>
+ * <li>การปกป้องข้อมูล (Encapsulation) ผ่านการใช้งาน Setter</li>
+ * <li>การพ้องรูป (Polymorphism) ที่ทำงานร่วมกันระหว่าง Cat, Dog และ MythicPet</li>
+ * <li>การลดลงของสถานะตามเวลา (Status decay behavior)</li>
+ * <li>ระบบการนอนหลับและการตื่น (Sleep and wake-up behavior)</li>
+ * <li>พฤติกรรมการใช้สกิลอัลติเมตเฉพาะตัวของสัตว์ในตำนาน (MythicPet)</li>
  * </ul>
  */
 @DisplayName("Pet Logic Tests")

@@ -18,15 +18,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for UserInventory and FileDataHandler.
+ * คลาสทดสอบ (Unit tests) สำหรับ UserInventory และ FileDataHandler
  *
- * <p>These tests cover:</p>
+ * <p>การทดสอบนี้ครอบคลุมเรื่อง:</p>
  * <ul>
- *   <li>Initial inventory state</li>
- *   <li>Pet management</li>
- *   <li>Coin management</li>
- *   <li>Polymorphism with AbstractPet</li>
- *   <li>File save/load behavior</li>
+ * <li>สถานะเริ่มต้นของกระเป๋าเก็บของ (Initial inventory state)</li>
+ * <li>การจัดการสัตว์เลี้ยง (Pet management)</li>
+ * <li>การจัดการเงินในเกม (Coin management)</li>
+ * <li>การพ้องรูป (Polymorphism) ที่ใช้งานร่วมกับ AbstractPet</li>
+ * <li>ระบบการบันทึกและโหลดข้อมูลจากไฟล์ (File save/load behavior)</li>
  * </ul>
  */
 @DisplayName("Inventory and File I/O Tests")

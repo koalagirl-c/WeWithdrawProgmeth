@@ -20,6 +20,15 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * คลาสหลักสำหรับรันแอปพลิเคชัน Kawaii Gacha Pet Sanctuary (UI และ Controller).
+ * <p>
+ * คลาสนี้สืบทอดจาก {@link Application} เพื่อสร้างหน้าต่าง JavaFX
+ * ทำหน้าที่เชื่อมต่อการทำงานระหว่างส่วนข้อมูล (Model/Data) และส่วนแสดงผล (View)
+ * รวมถึงจัดการ Thread นาฬิกาชีวิตของสัตว์เลี้ยงในเกม
+ * </p>
+ */
+
 public class KawaiiPetApp extends Application {
 
     private static UserInventory currentInventory;

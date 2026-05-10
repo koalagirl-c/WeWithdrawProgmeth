@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Manages the player's pet collection and coins.
  *
- * <p>This class uses ArrayList<AbstractPet> to support polymorphism.
+ * * <p>This class uses {@code ArrayList<AbstractPet>} to support polymorphism.
  * It can store Cat, Dog, MythicPet, or any other subclass of AbstractPet
  * in the same list.</p>
  */
