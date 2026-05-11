@@ -19,6 +19,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import java.util.List;
 
 /**
  * คลาสหลักสำหรับรันแอปพลิเคชัน Kawaii Gacha Pet Sanctuary (UI และ Controller).
@@ -48,6 +49,7 @@ public class KawaiiPetApp extends Application {
     private AudioClip catMeowSound;
     private AudioClip mythicHorseSound;
     private MediaPlayer bgmPlayer;
+    private boolean refreshingPetList;
 
     // Styles
     private final String ROOT_STYLE = "-fx-background-color: #fdf4ff; -fx-font-family: 'Segoe UI', sans-serif;";
@@ -140,6 +142,7 @@ public class KawaiiPetApp extends Application {
 
         petListView = new ListView<>(petObservableList);
         petListView.getSelectionModel().selectedIndexProperty().addListener((obs, oldV, newV) -> {
+            if (refreshingPetList) return;
             if (newV.intValue() >= 0) {
                 selectedPet = currentInventory.getPet(newV.intValue());
                 updateUI();
@@ -354,16 +357,40 @@ public class KawaiiPetApp extends Application {
             if (selectedPet.isSleeping()) statusMsg.setText(selectedPet.getName() + " is sleeping...");
         }
 
-        // อัปเดตรายชื่อด้านซ้าย
-        petObservableList.clear();
-        for (AbstractPet p : currentInventory.getAllPets()) {
-            petObservableList.add(p.getEmoji() + " " + p.getName() + " (Lv." + p.getLevel() + ")");
-        }
+        refreshPetList();
         coinLabel.setText("Coins: " + currentInventory.getCoins());
 
         String careAlert = getCareAlertText();
         if (!careAlert.isEmpty()) {
             statusMsg.setText(careAlert);
+        }
+    }
+
+    private void refreshPetList() {
+        int selectedIdx = petListView.getSelectionModel().getSelectedIndex();
+        AbstractPet petToRestore = selectedPet;
+        List<AbstractPet> pets = currentInventory.getAllPets();
+
+        refreshingPetList = true;
+        try {
+            petObservableList.clear();
+            for (AbstractPet p : pets) {
+                petObservableList.add(p.getEmoji() + " " + p.getName() + " (Lv." + p.getLevel() + ")");
+            }
+
+            int restoreIdx = pets.indexOf(petToRestore);
+            if (restoreIdx < 0 && selectedIdx >= 0 && selectedIdx < pets.size()) {
+                restoreIdx = selectedIdx;
+            }
+
+            if (restoreIdx >= 0) {
+                petListView.getSelectionModel().select(restoreIdx);
+                selectedPet = pets.get(restoreIdx);
+            } else {
+                petListView.getSelectionModel().clearSelection();
+            }
+        } finally {
+            refreshingPetList = false;
         }
     }
 
