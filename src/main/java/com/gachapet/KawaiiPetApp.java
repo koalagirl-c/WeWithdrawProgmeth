@@ -119,7 +119,7 @@ public class KawaiiPetApp extends Application {
         MenuItem saveItem = new MenuItem("Save");
         saveItem.setOnAction(e -> dataHandler.saveData(currentInventory));
         MenuItem exitItem = new MenuItem("Exit");
-        exitItem.setOnAction(e -> System.exit(0));
+        exitItem.setOnAction(e -> exitApplication());
         fileMenu.getItems().addAll(saveItem, new SeparatorMenuItem(), exitItem);
         menuBar.getMenus().add(fileMenu);
         root.setTop(menuBar);
@@ -214,6 +214,14 @@ public class KawaiiPetApp extends Application {
         root.setBottom(statusBar);
 
         return root;
+    }
+
+    private void exitApplication() {
+        dataHandler.saveData(currentInventory);
+        if (bgmPlayer != null) {
+            bgmPlayer.stop();
+        }
+        Platform.exit();
     }
 
     private void handleAction(String action) {

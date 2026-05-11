@@ -129,6 +129,10 @@ public abstract class AbstractPet implements Actionable, Serializable {
         this.level = clamp(level, 1, MAX_LEVEL);
     }
 
+    public void setExperience(int experience) {
+        this.experience = Math.max(0, experience);
+    }
+
     public void setImageVariant(int imageVariant) {
         this.imageVariant = Math.max(0, imageVariant);
     }

@@ -308,6 +308,8 @@ class InventoryTest {
         inventory.getPet(0).setHappiness(70);
         inventory.getPet(0).setEnergy(80);
         inventory.getPet(0).setLevel(3);
+        inventory.getPet(0).setExperience(45);
+        inventory.getPet(0).setImageVariant(2);
 
         dataHandler.saveData(inventory);
         UserInventory loaded = dataHandler.loadData();
@@ -327,6 +329,8 @@ class InventoryTest {
         assertEquals(70, loadedPet.getHappiness());
         assertEquals(80, loadedPet.getEnergy());
         assertEquals(3, loadedPet.getLevel());
+        assertEquals(45, loadedPet.getExperience());
+        assertEquals(2, loadedPet.getImageVariant());
     }
 
     @Test

@@ -215,11 +215,13 @@ public class FileDataHandler {
                 int happiness = Integer.parseInt(parts[4].trim());
                 int energy = Integer.parseInt(parts[5].trim());
                 int level = Integer.parseInt(parts[6].trim());
+                int experience = Integer.parseInt(parts[7].trim());
                 boolean sleeping = Boolean.parseBoolean(parts[8].trim());
 
                 pet.setHappiness(happiness);
                 pet.setEnergy(energy);
                 pet.setLevel(level);
+                pet.setExperience(experience);
                 pet.setSleeping(sleeping);
 
                 if (parts.length >= 10) {
@@ -229,7 +231,9 @@ public class FileDataHandler {
 
             } else {
                 int level = Integer.parseInt(parts[4].trim());
+                int experience = Integer.parseInt(parts[5].trim());
                 pet.setLevel(level);
+                pet.setExperience(experience);
             }
 
             return pet;
