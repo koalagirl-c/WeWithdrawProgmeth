@@ -76,6 +76,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#getEmoji()" tabindex="0">getEmoji()</a></li>
 <li><a href="#getSpecialSkill()" tabindex="0">getSpecialSkill()</a></li>
 <li><a href="#toString()" tabindex="0">toString()</a></li>
+<li><a href="#setUltimateCharges(int)" tabindex="0">setUltimateCharges(int)</a></li>
+<li><a href="#toCsvString()" tabindex="0">toCsvString()</a></li>
 </ol>
 </li>
 </ol>
@@ -218,6 +220,16 @@ extends AbstractPet เพื่อรับคุณสมบัติพื้
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Override: สัตว์ในตำนานเล่นแล้วได้ EXP สองเท่า และใช้พลังงานน้อย</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setUltimateCharges(int)" class="member-name-link">setUltimateCharges</a><wbr>(int&nbsp;charges)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">บังคับตั้งค่า Ultimate Charges (จำเป็นมากสำหรับใช้ตอน Load เซฟเกม)</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toCsvString()" class="member-name-link">toCsvString</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Override: บันทึกค่า ultimateCharges ต่อท้ายข้อมูลพื้นฐาน เพื่อให้เซฟและโหลดสกิลได้</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -228,7 +240,7 @@ extends AbstractPet เพื่อรับคุณสมบัติพื้
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.gachapet.model.AbstractPet">Methods inherited from class&nbsp;<a href="AbstractPet.html#method-summary" title="class in com.gachapet.model">AbstractPet</a></h3>
-<code><a href="AbstractPet.html#canDoAction()" title="canDoAction()">canDoAction</a>, <a href="AbstractPet.html#gainExperience(int)" title="gainExperience(int)">gainExperience</a>, <a href="AbstractPet.html#getAge()" title="getAge()">getAge</a>, <a href="AbstractPet.html#getCareAlertText()" title="getCareAlertText()">getCareAlertText</a>, <a href="AbstractPet.html#getEnergy()" title="getEnergy()">getEnergy</a>, <a href="AbstractPet.html#getExperience()" title="getExperience()">getExperience</a>, <a href="AbstractPet.html#getHappiness()" title="getHappiness()">getHappiness</a>, <a href="AbstractPet.html#getHp()" title="getHp()">getHp</a>, <a href="AbstractPet.html#getHunger()" title="getHunger()">getHunger</a>, <a href="AbstractPet.html#getImageVariant()" title="getImageVariant()">getImageVariant</a>, <a href="AbstractPet.html#getLevel()" title="getLevel()">getLevel</a>, <a href="AbstractPet.html#getName()" title="getName()">getName</a>, <a href="AbstractPet.html#getStatusText()" title="getStatusText()">getStatusText</a>, <a href="AbstractPet.html#isAlive()" title="isAlive()">isAlive</a>, <a href="AbstractPet.html#isSleeping()" title="isSleeping()">isSleeping</a>, <a href="AbstractPet.html#needsCareAlert()" title="needsCareAlert()">needsCareAlert</a>, <a href="AbstractPet.html#setEnergy(int)" title="setEnergy(int)">setEnergy</a>, <a href="AbstractPet.html#setHappiness(int)" title="setHappiness(int)">setHappiness</a>, <a href="AbstractPet.html#setHp(int)" title="setHp(int)">setHp</a>, <a href="AbstractPet.html#setHunger(int)" title="setHunger(int)">setHunger</a>, <a href="AbstractPet.html#setImageVariant(int)" title="setImageVariant(int)">setImageVariant</a>, <a href="AbstractPet.html#setLevel(int)" title="setLevel(int)">setLevel</a>, <a href="AbstractPet.html#setName(java.lang.String)" title="setName(String)">setName</a>, <a href="AbstractPet.html#setSleeping(boolean)" title="setSleeping(boolean)">setSleeping</a>, <a href="AbstractPet.html#sleep()" title="sleep()">sleep</a>, <a href="AbstractPet.html#tick()" title="tick()">tick</a>, <a href="AbstractPet.html#tickInactive()" title="tickInactive()">tickInactive</a>, <a href="AbstractPet.html#toCsvString()" title="toCsvString()">toCsvString</a>, <a href="AbstractPet.html#updateStatus()" title="updateStatus()">updateStatus</a>, <a href="AbstractPet.html#wakeUp()" title="wakeUp()">wakeUp</a></code></div>
+<code><a href="AbstractPet.html#canDoAction()" title="canDoAction()">canDoAction</a>, <a href="AbstractPet.html#gainExperience(int)" title="gainExperience(int)">gainExperience</a>, <a href="AbstractPet.html#getAge()" title="getAge()">getAge</a>, <a href="AbstractPet.html#getCareAlertText()" title="getCareAlertText()">getCareAlertText</a>, <a href="AbstractPet.html#getEnergy()" title="getEnergy()">getEnergy</a>, <a href="AbstractPet.html#getExperience()" title="getExperience()">getExperience</a>, <a href="AbstractPet.html#getHappiness()" title="getHappiness()">getHappiness</a>, <a href="AbstractPet.html#getHp()" title="getHp()">getHp</a>, <a href="AbstractPet.html#getHunger()" title="getHunger()">getHunger</a>, <a href="AbstractPet.html#getImageVariant()" title="getImageVariant()">getImageVariant</a>, <a href="AbstractPet.html#getLevel()" title="getLevel()">getLevel</a>, <a href="AbstractPet.html#getName()" title="getName()">getName</a>, <a href="AbstractPet.html#getStatusText()" title="getStatusText()">getStatusText</a>, <a href="AbstractPet.html#isAlive()" title="isAlive()">isAlive</a>, <a href="AbstractPet.html#isSleeping()" title="isSleeping()">isSleeping</a>, <a href="AbstractPet.html#needsCareAlert()" title="needsCareAlert()">needsCareAlert</a>, <a href="AbstractPet.html#setEnergy(int)" title="setEnergy(int)">setEnergy</a>, <a href="AbstractPet.html#setExperience(int)" title="setExperience(int)">setExperience</a>, <a href="AbstractPet.html#setHappiness(int)" title="setHappiness(int)">setHappiness</a>, <a href="AbstractPet.html#setHp(int)" title="setHp(int)">setHp</a>, <a href="AbstractPet.html#setHunger(int)" title="setHunger(int)">setHunger</a>, <a href="AbstractPet.html#setImageVariant(int)" title="setImageVariant(int)">setImageVariant</a>, <a href="AbstractPet.html#setLevel(int)" title="setLevel(int)">setLevel</a>, <a href="AbstractPet.html#setName(java.lang.String)" title="setName(String)">setName</a>, <a href="AbstractPet.html#setSleeping(boolean)" title="setSleeping(boolean)">setSleeping</a>, <a href="AbstractPet.html#sleep()" title="sleep()">sleep</a>, <a href="AbstractPet.html#tick()" title="tick()">tick</a>, <a href="AbstractPet.html#tickInactive()" title="tickInactive()">tickInactive</a>, <a href="AbstractPet.html#updateStatus()" title="updateStatus()">updateStatus</a>, <a href="AbstractPet.html#wakeUp()" title="wakeUp()">wakeUp</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -458,6 +470,28 @@ extends AbstractPet เพื่อรับคุณสมบัติพื้
 <dd><code><a href="AbstractPet.html#toString()">toString</a></code>&nbsp;in class&nbsp;<code><a href="AbstractPet.html" title="class in com.gachapet.model">AbstractPet</a></code></dd>
 <dt>Returns:</dt>
 <dd>ข้อมูลสรุปของสัตว์ในตำนาน</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setUltimateCharges(int)">
+<h3>setUltimateCharges</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setUltimateCharges</span><wbr><span class="parameters">(int&nbsp;charges)</span></div>
+<div class="block">บังคับตั้งค่า Ultimate Charges (จำเป็นมากสำหรับใช้ตอน Load เซฟเกม)</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="toCsvString()">
+<h3>toCsvString</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toCsvString</span>()</div>
+<div class="block">Override: บันทึกค่า ultimateCharges ต่อท้ายข้อมูลพื้นฐาน เพื่อให้เซฟและโหลดสกิลได้</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="AbstractPet.html#toCsvString()">toCsvString</a></code>&nbsp;in class&nbsp;<code><a href="AbstractPet.html" title="class in com.gachapet.model">AbstractPet</a></code></dd>
 </dl>
 </div>
 </section>
