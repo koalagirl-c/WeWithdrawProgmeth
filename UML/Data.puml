@@ -1,0 +1,48 @@
+@startuml
+class com.gachapet.data.FileDataHandler {
+- {static} String DEFAULT_SAVE_FILE
+- {static} String PREFIX_PLAYER
+- {static} String PREFIX_COINS
+- {static} String PREFIX_PET
+- String filePath
++ <<Create>> FileDataHandler()
++ <<Create>> FileDataHandler(String)
++ boolean saveData(UserInventory)
++ UserInventory loadData()
++ boolean deleteSaveFile()
++ boolean hasSaveFile()
+- AbstractPet parsePetFromCsv(String)
+- AbstractPet createPetByType(String,String)
+- void setInventoryCoins(UserInventory,int)
++ String getFilePath()
+}
+
+
+class com.gachapet.data.UserInventory {
++ {static} int STARTING_COINS
++ {static} int MAX_PET_CAPACITY
+- ArrayList<AbstractPet> pets
+- int coins
+- String playerName
++ <<Create>> UserInventory(String)
++ boolean addPet(AbstractPet)
++ AbstractPet removePet(int)
++ AbstractPet getPet(int)
++ List<AbstractPet> getAllPets()
++ int getPetCount()
++ boolean isFull()
++ boolean isEmpty()
++ boolean isValidIndex(int)
++ int getCoins()
++ void setCoins(int)
++ void addCoins(int)
++ boolean spendCoins(int)
++ boolean hasEnoughCoins(int)
++ String getPlayerName()
++ void setPlayerName(String)
+~ ArrayList<AbstractPet> getPetsInternal()
++ String toString()
+}
+
+
+@enduml

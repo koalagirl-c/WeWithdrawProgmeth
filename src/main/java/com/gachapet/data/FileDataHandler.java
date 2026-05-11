@@ -229,6 +229,11 @@ public class FileDataHandler {
                     pet.setImageVariant(imageVariant);
                 }
 
+                if (pet instanceof MythicPet && parts.length >= 11) {
+                    int charges = Integer.parseInt(parts[10].trim());
+                    ((MythicPet) pet).setUltimateCharges(charges);
+                }
+
             } else {
                 int level = Integer.parseInt(parts[4].trim());
                 int experience = Integer.parseInt(parts[5].trim());

@@ -1,0 +1,41 @@
+@startuml
+class com.gachapet.KawaiiPetApp {
+- {static} UserInventory currentInventory
+- {static} FileDataHandler dataHandler
+- AbstractPet selectedPet
+- ProgressBar hpBar
+- Label hpLabel
+- ListView<String> petListView
+- ObservableList<String> petObservableList
+- ImageView petImageView
+- Image[] dogImages
+- Image[] catImages
+- Image mythicImage
+- AudioClip dogBarkSound
+- AudioClip catMeowSound
+- AudioClip mythicHorseSound
+- MediaPlayer bgmPlayer
+- String ROOT_STYLE
+- String PANEL_STYLE
+- String TITLE_STYLE
+- String GACHA_BTN_STYLE
+- String ACTION_BTN_STYLE
++ void start(Stage)
+- BorderPane buildMainView()
+- void handleAction(String)
+- void loadAssets()
+- void playBackgroundMusic()
+- void playPetSound(AbstractPet)
+- void renameSelectedPet()
+- void updateUI()
+- String getCareAlertText()
+- Image getPetImage(AbstractPet)
+- void openGachaWindow()
++ {static} void main(String[])
+}
+
+
+
+
+javafx.application.Application <|-- com.gachapet.KawaiiPetApp
+@enduml

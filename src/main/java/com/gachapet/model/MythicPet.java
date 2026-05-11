@@ -191,4 +191,19 @@ public class MythicPet extends AbstractPet {
     public String toString() {
         return super.toString() + " | ⚡ Ultimate: " + ultimateCharges + "/" + MAX_ULTIMATE_CHARGES;
     }
+
+    /**
+     * บังคับตั้งค่า Ultimate Charges (จำเป็นมากสำหรับใช้ตอน Load เซฟเกม)
+     */
+    public void setUltimateCharges(int charges) {
+        this.ultimateCharges = Math.max(0, Math.min(charges, MAX_ULTIMATE_CHARGES));
+    }
+
+    /**
+     * Override: บันทึกค่า ultimateCharges ต่อท้ายข้อมูลพื้นฐาน เพื่อให้เซฟและโหลดสกิลได้
+     */
+    @Override
+    public String toCsvString() {
+        return super.toCsvString() + "," + this.ultimateCharges;
+    }
 }
