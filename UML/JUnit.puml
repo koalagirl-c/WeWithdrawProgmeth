@@ -1,0 +1,100 @@
+@startuml
+class com.gachapet.test.PetLogicTest {
+- Cat cat
+- Dog dog
+- MythicPet mythic
+~ void setUp()
+~ void testHpCannotGoBelowZero()
+~ void testHpCannotExceedMax()
+~ void testHungerCannotGoBelowZero()
+~ void testHungerCannotExceedMax()
+~ void testHappinessCannotGoBelowZero()
+~ void testHappinessCannotExceedMax()
+~ void testEnergyCannotGoBelowZero()
+~ void testEnergyCannotExceedMax()
+~ void testIsAliveWhenHpIsZero()
+~ void testNewPetIsAlive()
+~ void testInitialValues()
+~ void testConstructorThrowsOnInvalidName()
+~ void testPolymorphismMakeSound()
+~ void testGetPetType()
+~ void testGetEmoji()
+~ void testGetSpecialSkill()
+~ void testPolymorphismPlayDifference()
+~ void testMythicEatBetterThanDog()
+~ void testCatPlayChangesStats()
+~ void testDogPlayChangesStats()
+~ void testPerformActionPolymorphism()
+~ void testHungerDecayRateDifference()
+~ void testTickUpdatesAgeWithoutImmediateStatDecay()
+~ void testStatsDecayAfterCareInterval()
+~ void testInactivePetStatsDecaySlowly()
+~ void testCareAlertWhenStatsDropToHalf()
+~ void testLowStatsReduceHp()
+~ void testGoodStatsRestoreHp()
+~ void testSleepSetsSleepingTrue()
+~ void testWakeUpSetsSleepingFalse()
+~ void testSleepingPetGainsEnergy()
+~ void testSleepingPetCannotPerformNormalActions()
+~ void testMythicUltimateHealsToFull()
+~ void testMythicUltimateChargesDoNotExceedMax()
+}
+
+
+class com.gachapet.test.GachaTest {
+- {static} double TOLERANCE
+- {static} int SAMPLE_SIZE
+- {static} long TEST_SEED
+- GachaSystem gacha
+~ void setUp()
+~ void testTotalDropRateEqualsOneHundredPercent()
+~ void testGachaCostIsPositive()
+~ void testMythicDropRateApproximatelyTenPercent()
+~ void testDogDropRateApproximatelyFortyPercent()
+~ void testCatDropRateApproximatelyFiftyPercent()
+~ void testRollNeverReturnsNull()
+~ void testRollReturnsValidPetType()
+~ void testRollReturnsAbstractPetSubtype()
+~ void testRolledPetHasValidInitialState()
+~ void testRollTenReturnsExactlyTenPets()
+~ void testRollTenNoNullElements()
+~ void testRollTenGuaranteesMythicPet()
+~ void testCanRoll()
+~ void testCanRollTen()
+~ void testGetDropRateInfoContainsAllPetTypes()
+}
+
+
+class com.gachapet.test.InventoryTest {
+- {static} String TEST_FILE
+- UserInventory inventory
+- FileDataHandler dataHandler
+~ void setUp()
+~ void tearDown()
+~ void testInitialCoins()
+~ void testInitialPetCount()
+~ void testPlayerName()
+~ void testAddPetSuccess()
+~ void testAddNullPetReturnsFalse()
+~ void testAddPetWhenInventoryFull()
+~ void testInventoryStoresDifferentPetTypes()
+~ void testGetAllPetsReturnsCopy()
+~ void testRemovePetSuccess()
+~ void testRemovePetInvalidIndex()
+~ void testGetPetInvalidIndex()
+~ void testSpendCoinsInsufficientFunds()
+~ void testSpendCoinsSuccess()
+~ void testAddCoins()
+~ void testInvalidCoinOperations()
+~ void testSetCoinsPreventsNegativeValues()
+~ void testHasEnoughCoins()
+~ void testSaveDataCreatesFile()
+~ void testLoadDataWithNoFile()
+~ void testHasSaveFile()
+~ void testDeleteSaveFile()
+~ void testSaveAndLoadRoundTrip()
+~ void testMythicPetSaveLoad()
+}
+
+
+@enduml

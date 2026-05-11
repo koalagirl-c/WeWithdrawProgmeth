@@ -15,6 +15,7 @@ class com.gachapet.KawaiiPetApp {
 - AudioClip catMeowSound
 - AudioClip mythicHorseSound
 - MediaPlayer bgmPlayer
+- boolean refreshingPetList
 - String ROOT_STYLE
 - String PANEL_STYLE
 - String TITLE_STYLE
@@ -22,12 +23,14 @@ class com.gachapet.KawaiiPetApp {
 - String ACTION_BTN_STYLE
 + void start(Stage)
 - BorderPane buildMainView()
+- void exitApplication()
 - void handleAction(String)
 - void loadAssets()
 - void playBackgroundMusic()
 - void playPetSound(AbstractPet)
 - void renameSelectedPet()
 - void updateUI()
+- void refreshPetList()
 - String getCareAlertText()
 - Image getPetImage(AbstractPet)
 - void openGachaWindow()

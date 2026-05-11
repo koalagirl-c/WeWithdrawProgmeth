@@ -40,6 +40,7 @@ abstract class com.gachapet.model.AbstractPet {
 + void setHappiness(int)
 + void setEnergy(int)
 + void setLevel(int)
++ void setExperience(int)
 + void setImageVariant(int)
 + void setSleeping(boolean)
 - int clamp(int,int,int)
@@ -141,6 +142,8 @@ class com.gachapet.model.MythicPet {
 + String getEmoji()
 + String getSpecialSkill()
 + String toString()
++ void setUltimateCharges(int)
++ String toCsvString()
 }
 
 
