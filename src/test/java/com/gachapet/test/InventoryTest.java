@@ -334,9 +334,12 @@ class InventoryTest {
     }
 
     @Test
-    @DisplayName("MythicPet should save and load correctly")
+    @DisplayName("MythicPet should save and load correctly including ultimate charges")
     void testMythicPetSaveLoad() {
-        inventory.addPet(new MythicPet("Celestia"));
+        MythicPet originalMythic = new MythicPet("Celestia");
+        // ✨ จำลองว่าผู้เล่นใช้สกิลไปแล้ว เหลือแค่ 1 ครั้ง ก่อนกดเซฟเกม
+        originalMythic.setUltimateCharges(1);
+        inventory.addPet(originalMythic);
 
         dataHandler.saveData(inventory);
         UserInventory loaded = dataHandler.loadData();
@@ -350,5 +353,9 @@ class InventoryTest {
         assertInstanceOf(MythicPet.class, pet);
         assertEquals("MYTHIC", pet.getPetType());
         assertEquals("Celestia", pet.getName());
+
+        // ✨ เพิ่มการตรวจสอบว่าโหลดจำนวนสกิลกลับมาได้เท่าเดิม (คือ 1 ครั้ง ไม่ใช่กลับไปเต็ม 3)
+        MythicPet loadedMythic = (MythicPet) pet;
+        assertEquals(1, loadedMythic.getUltimateCharges(), "Ultimate charges should be loaded correctly from save file.");
     }
 }

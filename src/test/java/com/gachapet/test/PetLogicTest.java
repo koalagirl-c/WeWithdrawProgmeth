@@ -440,4 +440,16 @@ class PetLogicTest {
 
         assertTrue(mythic.getUltimateCharges() <= 3, "Ultimate charges should not exceed the maximum limit.");
     }
+
+    @Test
+    @DisplayName("setUltimateCharges() should clamp values between 0 and maximum")
+    void testSetUltimateChargesBoundaries() {
+        // ลองใส่ค่าเกินขีดจำกัด
+        mythic.setUltimateCharges(999);
+        assertTrue(mythic.getUltimateCharges() <= 3, "Charges should not exceed the maximum limit.");
+
+        // ลองใส่ค่าติดลบ
+        mythic.setUltimateCharges(-5);
+        assertEquals(0, mythic.getUltimateCharges(), "Charges should not go below zero.");
+    }
 }
